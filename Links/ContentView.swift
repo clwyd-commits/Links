@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 0.5
-// Stable Build
+// VERSION 1.9 STABLE
+// Working full version
 // 2026-05-23
 
 import SwiftUI
@@ -34,18 +34,23 @@ struct ContentView: View {
     @State private var draggedLink: LinkItem?
     @State private var draggedShortcut: AppShortcut?
 
+    @State private var hoveringAddShortcut = false
+    @State private var hoveringAddLink = false
+
+    let borderColor = Color.gray.opacity(0.28)
+    let hoverBorderColor = Color.white.opacity(0.55)
+
     var body: some View {
+
         VStack(spacing: 0) {
 
             topBar
 
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 10) {
 
                 shortcutRow
 
                 linkList
-
-                addLinkIcon
             }
             .padding(22)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -133,12 +138,6 @@ struct ContentView: View {
         }
         .frame(height: 24)
         .background(Color.black.opacity(0.26))
-        .overlay(
-            Rectangle()
-                .fill(.white.opacity(0.05))
-                .frame(height: 1),
-            alignment: .bottom
-        )
     }
 
     var shortcutRow: some View {
@@ -187,56 +186,63 @@ struct ContentView: View {
                 }
             }
 
-            Button {
-
-                showingAddShortcutSheet = true
-
-            } label: {
-
-                ZStack {
-
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white.opacity(0.10), lineWidth: 1)
-
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(.black.opacity(0.22))
-
-                    Image(systemName: "plus")
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.45))
-                }
-                .frame(width: 46, height: 46)
-            }
-            .buttonStyle(.plain)
+            addShortcutButton
         }
-        .padding(.leading, 32)
+        .padding(.leading, 18)
         .padding(.top, 18)
-        .padding(.bottom, 8)
+        .padding(.bottom, 2)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    var addShortcutButton: some View {
+
+        Button {
+
+            showingAddShortcutSheet = true
+
+        } label: {
+
+            ZStack {
+
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(
+                        hoveringAddShortcut ? hoverBorderColor : borderColor,
+                        lineWidth: 0.5
+                    )
+
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.black.opacity(0.14))
+
+                Image(systemName: "plus")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.16))
+            }
+            .frame(width: 46, height: 46)
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+
+            withAnimation(.easeOut(duration: 0.12)) {
+
+                hoveringAddShortcut = hovering
+            }
+        }
     }
 
     func shortcutIcon(_ shortcut: AppShortcut) -> some View {
 
-        ZStack {
-
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.10), lineWidth: 1)
-
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.black.opacity(0.22))
-
-            Image(systemName: shortcut.icon)
-                .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(.white.opacity(0.82))
-        }
-        .frame(width: 46, height: 46)
+        HoverShortcutIcon(
+            shortcut: shortcut,
+            borderColor: borderColor,
+            hoverBorderColor: hoverBorderColor
+        )
     }
 
     var linkList: some View {
 
         ScrollView {
 
-            VStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 8) {
 
                 ForEach(links) { link in
 
@@ -271,6 +277,8 @@ struct ContentView: View {
                             }
                         }
                 }
+
+                addLinkRow
             }
             .padding(.horizontal, 18)
             .padding(.bottom, 18)
@@ -279,44 +287,15 @@ struct ContentView: View {
 
     func row(_ link: LinkItem) -> some View {
 
-        HStack(spacing: 14) {
-
-            ZStack {
-
-                RoundedRectangle(cornerRadius: 7)
-                    .stroke(.white.opacity(0.10), lineWidth: 1)
-
-                RoundedRectangle(cornerRadius: 7)
-                    .fill(.black.opacity(0.22))
-
-                Image(systemName: link.icon)
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.82))
-            }
-            .frame(width: 30, height: 30)
-
-            Text(link.title)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(.white.opacity(0.82))
-
-            Spacer()
-        }
-        .padding(.horizontal, 14)
-        .frame(height: 46)
-        .background(.white.opacity(0.025))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(.white.opacity(0.04), lineWidth: 1)
+        HoverLinkRow(
+            link: link,
+            borderColor: borderColor,
+            hoverBorderColor: hoverBorderColor,
+            openURL: openURL
         )
-        .contentShape(Rectangle())
-        .onTapGesture {
-
-            openURL(link.url)
-        }
     }
 
-    var addLinkIcon: some View {
+    var addLinkRow: some View {
 
         Button {
 
@@ -324,36 +303,54 @@ struct ContentView: View {
 
         } label: {
 
-            ZStack {
+            HStack(spacing: 14) {
 
-                RoundedRectangle(cornerRadius: 7)
-                    .stroke(.white.opacity(0.10), lineWidth: 1)
+                ZStack {
 
-                RoundedRectangle(cornerRadius: 7)
-                    .fill(.black.opacity(0.22))
+                    RoundedRectangle(cornerRadius: 7)
+                        .stroke(
+                            hoveringAddLink ? hoverBorderColor : borderColor,
+                            lineWidth: 0.5
+                        )
 
-                Image(systemName: "plus")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.45))
+                    RoundedRectangle(cornerRadius: 7)
+                        .fill(.black.opacity(0.22))
+
+                    Image(systemName: "plus")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.16))
+                }
+                .frame(width: 30, height: 30)
+
+                Spacer()
             }
-            .frame(width: 30, height: 30)
+            .padding(.horizontal, 14)
+            .frame(height: 46)
+            .background(.white.opacity(0.025))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(
+                        hoveringAddLink ? hoverBorderColor : borderColor,
+                        lineWidth: 0.5
+                    )
+            )
         }
         .buttonStyle(.plain)
-        .padding(.leading, 32)
-        .padding(.bottom, 4)
+        .onHover { hovering in
+
+            withAnimation(.easeOut(duration: 0.12)) {
+
+                hoveringAddLink = hovering
+            }
+        }
     }
 
     var bottomBar: some View {
 
         Rectangle()
             .fill(Color.black.opacity(0.22))
-            .frame(height: 20)
-            .overlay(
-                Rectangle()
-                    .fill(.white.opacity(0.05))
-                    .frame(height: 1),
-                alignment: .top
-            )
+            .frame(height: 24)
     }
 
     func openURL(_ target: String) {
@@ -393,13 +390,7 @@ struct ContentView: View {
             links = [
                 LinkItem(title: "Atomic Bid Planner", icon: "plus", url: "https://docs.google.com"),
                 LinkItem(title: "VFX Tracking", icon: "waveform.path.ecg", url: "https://docs.google.com"),
-                LinkItem(title: "ShotGrid", icon: "cube.transparent.fill", url: "https://shotgrid.autodesk.com"),
-                LinkItem(title: "Client Reviews", icon: "eye.fill", url: "https://frame.io"),
-                LinkItem(title: "Unreal Engine", icon: "cube.fill", url: "https://unrealengine.com"),
-                LinkItem(title: "Blender", icon: "camera.aperture", url: "https://blender.org"),
-                LinkItem(title: "DaVinci Resolve", icon: "circle.grid.cross.fill", url: "https://blackmagicdesign.com"),
-                LinkItem(title: "YouTube", icon: "play.rectangle.fill", url: "https://youtube.com"),
-                LinkItem(title: "Research", icon: "globe", url: "https://google.com")
+                LinkItem(title: "ShotGrid", icon: "cube.transparent.fill", url: "https://shotgrid.autodesk.com")
             ]
         }
     }
@@ -422,15 +413,118 @@ struct ContentView: View {
         } else {
 
             shortcuts = [
-                AppShortcut(title: "Xcode", icon: "hammer.fill", url: "/Applications/Xcode.app"),
+                AppShortcut(title: "Firefox", icon: "globe", url: "/Applications/Firefox.app"),
                 AppShortcut(title: "VS Code", icon: "chevron.left.forwardslash.chevron.right", url: "/Applications/Visual Studio Code.app"),
-                AppShortcut(title: "Figma", icon: "paintpalette.fill", url: "/Applications/Figma.app"),
-                AppShortcut(title: "GitHub", icon: "cat.fill", url: "https://github.com"),
-                AppShortcut(title: "Notion", icon: "note.text", url: "/Applications/Notion.app"),
-                AppShortcut(title: "Slack", icon: "message.fill", url: "/Applications/Slack.app"),
-                AppShortcut(title: "Chrome", icon: "circle.fill", url: "/Applications/Google Chrome.app"),
                 AppShortcut(title: "YouTube", icon: "play.rectangle.fill", url: "https://youtube.com")
             ]
+        }
+    }
+}
+
+struct HoverShortcutIcon: View {
+
+    let shortcut: AppShortcut
+    let borderColor: Color
+    let hoverBorderColor: Color
+
+    @State private var hovering = false
+
+    var body: some View {
+
+        ZStack {
+
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(
+                    hovering ? hoverBorderColor : borderColor,
+                    lineWidth: 0.5
+                )
+
+            RoundedRectangle(cornerRadius: 8)
+                .fill(.black.opacity(0.22))
+
+            Image(systemName: shortcut.icon)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundStyle(iconColor)
+        }
+        .frame(width: 46, height: 46)
+        .onHover { hover in
+
+            withAnimation(.easeOut(duration: 0.12)) {
+
+                hovering = hover
+            }
+        }
+    }
+
+    var iconColor: Color {
+
+        if shortcut.title.lowercased() == "youtube" && hovering {
+
+            return .red
+        }
+
+        return .white.opacity(0.82)
+    }
+}
+
+struct HoverLinkRow: View {
+
+    let link: LinkItem
+    let borderColor: Color
+    let hoverBorderColor: Color
+    let openURL: (String) -> Void
+
+    @State private var hovering = false
+
+    var body: some View {
+
+        HStack(spacing: 14) {
+
+            ZStack {
+
+                RoundedRectangle(cornerRadius: 7)
+                    .stroke(
+                        hovering ? hoverBorderColor : borderColor,
+                        lineWidth: 0.5
+                    )
+
+                RoundedRectangle(cornerRadius: 7)
+                    .fill(.black.opacity(0.22))
+
+                Image(systemName: link.icon)
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.white.opacity(0.82))
+            }
+            .frame(width: 30, height: 30)
+
+            Text(link.title)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(.white.opacity(0.82))
+
+            Spacer()
+        }
+        .padding(.horizontal, 14)
+        .frame(height: 46)
+        .background(.white.opacity(0.025))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(
+                    hovering ? hoverBorderColor : borderColor,
+                    lineWidth: 0.5
+                )
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+
+            openURL(link.url)
+        }
+        .onHover { hover in
+
+            withAnimation(.easeOut(duration: 0.12)) {
+
+                hovering = hover
+            }
         }
     }
 }
@@ -514,9 +608,7 @@ struct LinkEditorView: View {
     @Environment(\.dismiss) var dismiss
 
     @State var title: String
-
     @State var icon: String
-
     @State var url: String
 
     let onSave: (String, String, String) -> Void
@@ -565,9 +657,7 @@ struct ShortcutEditorView: View {
     @Environment(\.dismiss) var dismiss
 
     @State var title: String
-
     @State var icon: String
-
     @State var url: String
 
     let onSave: (String, String, String) -> Void
@@ -615,3 +705,4 @@ struct ShortcutEditorView: View {
 
     ContentView()
 }
+
