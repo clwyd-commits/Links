@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 2.0
-// Expandable groups
+// VERSION 2.3
+// Expandable groups + wrapping software icon rows
 // Based on v1.9 stable
 // 2026-05-24
 
@@ -75,6 +75,10 @@ struct ContentView: View {
 
     let borderColor = Color.gray.opacity(0.28)
     let hoverBorderColor = Color.white.opacity(0.55)
+    let frameCornerRadius: CGFloat = 10
+    let innerFrameInset: CGFloat = 24
+    let shortcutIconSize: CGFloat = 46
+    let shortcutIconSpacing: CGFloat = 12
 
     var body: some View {
 
@@ -82,18 +86,33 @@ struct ContentView: View {
 
             topBar
 
-            VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 0) {
 
-                shortcutRow
+                sideBorder
 
-                linkList
+                VStack(alignment: .leading, spacing: 10) {
+
+                    shortcutRow
+
+                    linkList
+                }
+                .padding(22)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                sideBorder
             }
-            .padding(22)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             bottomBar
         }
         .background(background)
+        .clipShape(
+            RoundedRectangle(cornerRadius: frameCornerRadius)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: frameCornerRadius)
+                .stroke(Color.white.opacity(0.16), lineWidth: 0.5)
+                .padding(innerFrameInset)
+        )
         .preferredColorScheme(.dark)
         .onAppear {
 
@@ -212,9 +231,29 @@ struct ContentView: View {
         .background(Color.black.opacity(0.26))
     }
 
+    var sideBorder: some View {
+
+        Rectangle()
+            .fill(Color.black.opacity(0.24))
+            .frame(width: 24)
+    }
+
     var shortcutRow: some View {
 
-        HStack(spacing: 12) {
+        LazyVGrid(
+            columns: [
+                GridItem(
+                    .adaptive(
+                        minimum: shortcutIconSize,
+                        maximum: shortcutIconSize
+                    ),
+                    spacing: shortcutIconSpacing,
+                    alignment: .leading
+                )
+            ],
+            alignment: .leading,
+            spacing: shortcutIconSpacing
+        ) {
 
             ForEach(shortcuts) { shortcut in
 
@@ -308,7 +347,7 @@ struct ContentView: View {
                         .white.opacity(0.16)
                     )
             }
-            .frame(width: 46, height: 46)
+            .frame(width: shortcutIconSize, height: shortcutIconSize)
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -979,18 +1018,6 @@ struct LinkEditorView: View {
             alignment: .leading,
             spacing: 18
         ) {
-
-            Text(
-                item.isGroup
-                ? "Group"
-                : "Link"
-            )
-            .font(
-                .system(
-                    size: 18,
-                    weight: .bold
-                )
-            )
 
             Toggle(
                 "This is a group",
