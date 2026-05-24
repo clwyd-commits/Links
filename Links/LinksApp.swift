@@ -13,5 +13,6 @@ struct LinksApp: App {
         WindowGroup {
             ContentView()
         }
-    }
+        .windowStyle(.hiddenTitleBar)
+        }
 }
