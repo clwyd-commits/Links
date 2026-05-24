@@ -1,7 +1,6 @@
 // LINKS APP
-// VERSION 3.6
-// Child group rows indent whole boxes from the left
-// Based on v1.9 stable
+// VERSION 3.8
+// Stable autosave + persistent icon storage
 // 2026-05-24
 
 import SwiftUI
