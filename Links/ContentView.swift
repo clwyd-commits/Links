@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 2.6
-// Drag reorder links
+// VERSION 2.7
+// Larger software icons with tighter spacing
 // Based on v1.9 stable
 // 2026-05-24
 
@@ -78,8 +78,8 @@ struct ContentView: View {
     let hoverBorderColor = Color.white.opacity(0.55)
     let frameCornerRadius: CGFloat = 10
     let innerFrameInset: CGFloat = 24
-    let shortcutIconSize: CGFloat = 46
-    let shortcutIconSpacing: CGFloat = 12
+    let shortcutIconSize: CGFloat = 69
+    let shortcutIconSpacing: CGFloat = 6
 
     var body: some View {
 
@@ -834,13 +834,13 @@ struct HoverShortcutIcon: View {
             Image(systemName: shortcut.icon)
                 .font(
                     .system(
-                        size: 18,
+                        size: 27,
                         weight: .bold
                     )
                 )
                 .foregroundStyle(iconColor)
         }
-        .frame(width: 46, height: 46)
+        .frame(width: 69, height: 69)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
