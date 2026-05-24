@@ -1,11 +1,12 @@
 // LINKS APP
-// VERSION 2.7
-// Larger software icons with tighter spacing
+// VERSION 3.6
+// Child group rows indent whole boxes from the left
 // Based on v1.9 stable
 // 2026-05-24
 
 import SwiftUI
 import UniformTypeIdentifiers
+import AppKit
 
 struct LinkItem: Identifiable, Codable, Equatable {
 
@@ -462,6 +463,7 @@ struct ContentView: View {
         }
     }
 
+
     var visibleLinks: [VisibleLinkItem] {
 
         flattenLinks(
@@ -830,15 +832,34 @@ struct HoverShortcutIcon: View {
 
             RoundedRectangle(cornerRadius: 8)
                 .fill(.black.opacity(0.22))
+            if isImagePath(shortcut.icon),
+               let customIcon = NSImage(contentsOfFile: shortcut.icon) {
 
-            Image(systemName: shortcut.icon)
-                .font(
-                    .system(
-                        size: 27,
-                        weight: .bold
+                Image(nsImage: customIcon)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 69, height: 69)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+            } else if isApplicationPath(shortcut.url) {
+
+                Image(nsImage: NSWorkspace.shared.icon(forFile: shortcut.url))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 69, height: 69)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+            } else {
+
+                Image(systemName: shortcut.icon)
+                    .font(
+                        .system(
+                            size: 27,
+                            weight: .bold
+                        )
                     )
-                )
-                .foregroundStyle(iconColor)
+                    .foregroundStyle(iconColor)
+            }
         }
         .frame(width: 69, height: 69)
         .onHover { hover in
@@ -860,6 +881,26 @@ struct HoverShortcutIcon: View {
         }
 
         return .white.opacity(0.82)
+    }
+    
+    func isApplicationPath(_ path: String) -> Bool {
+
+        path.hasSuffix(".app") && FileManager.default.fileExists(atPath: path)
+    }
+
+    func isImagePath(_ path: String) -> Bool {
+
+        let lowercasedPath = path.lowercased()
+
+        return FileManager.default.fileExists(atPath: path) &&
+            (
+                lowercasedPath.hasSuffix(".png") ||
+                lowercasedPath.hasSuffix(".jpg") ||
+                lowercasedPath.hasSuffix(".jpeg") ||
+                lowercasedPath.hasSuffix(".icns") ||
+                lowercasedPath.hasSuffix(".tiff") ||
+                lowercasedPath.hasSuffix(".webp")
+            )
     }
 }
 
@@ -898,16 +939,62 @@ struct HoverLinkRow: View {
                     RoundedRectangle(cornerRadius: 7)
                         .fill(.black.opacity(0.22))
 
-                    Image(systemName: link.icon)
-                        .font(
-                            .system(
-                                size: 14,
-                                weight: .bold
+                    if isImagePath(link.icon),
+                       let customIcon = NSImage(contentsOfFile: link.icon) {
+
+                        Image(nsImage: customIcon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 26, height: 26)
+
+                    } else if isApplicationPath(link.url) {
+
+                        Image(nsImage: NSWorkspace.shared.icon(forFile: link.url))
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 26, height: 26)
+
+                    } else if let faviconURL = faviconURL(for: link.url) {
+
+                        AsyncImage(url: faviconURL) { phase in
+
+                            switch phase {
+
+                            case .success(let image):
+
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 26, height: 26)
+
+                            default:
+
+                                Image(systemName: link.icon)
+                                    .font(
+                                        .system(
+                                            size: 14,
+                                            weight: .bold
+                                        )
+                                    )
+                                    .foregroundStyle(
+                                        .white.opacity(0.82)
+                                    )
+                            }
+                        }
+
+                    } else {
+
+                        Image(systemName: link.icon)
+                            .font(
+                                .system(
+                                    size: 14,
+                                    weight: .bold
+                                )
                             )
-                        )
-                        .foregroundStyle(
-                            .white.opacity(0.82)
-                        )
+                            .foregroundStyle(
+                                .white.opacity(0.82)
+                            )
+                    }
                 }
                 .frame(width: 30, height: 30)
 
@@ -944,10 +1031,6 @@ struct HoverLinkRow: View {
                 }
             }
             .padding(.horizontal, 14)
-            .padding(
-                .leading,
-                CGFloat(level) * 24
-            )
             .frame(height: 46)
             .background(.white.opacity(0.05))
             .clipShape(
@@ -962,6 +1045,10 @@ struct HoverLinkRow: View {
                         lineWidth: 0.5
                     )
             )
+            .padding(
+                .leading,
+                CGFloat(level) * 24
+            )
         }
         .buttonStyle(.plain)
         .onHover { hover in
@@ -973,6 +1060,40 @@ struct HoverLinkRow: View {
         }
     }
 }
+
+    func isApplicationPath(_ path: String) -> Bool {
+
+        path.hasSuffix(".app") && FileManager.default.fileExists(atPath: path)
+    }
+
+    func faviconURL(for urlString: String) -> URL? {
+
+        guard let url = URL(string: urlString),
+              let scheme = url.scheme?.lowercased(),
+              scheme == "http" || scheme == "https",
+              let host = url.host,
+              !host.isEmpty else {
+
+            return nil
+        }
+
+        return URL(string: "https://www.google.com/s2/favicons?sz=64&domain=\(host)")
+    }
+
+    func isImagePath(_ path: String) -> Bool {
+
+        let lowercasedPath = path.lowercased()
+
+        return FileManager.default.fileExists(atPath: path) &&
+            (
+                lowercasedPath.hasSuffix(".png") ||
+                lowercasedPath.hasSuffix(".jpg") ||
+                lowercasedPath.hasSuffix(".jpeg") ||
+                lowercasedPath.hasSuffix(".icns") ||
+                lowercasedPath.hasSuffix(".tiff") ||
+                lowercasedPath.hasSuffix(".webp")
+            )
+    }
 
 struct ShortcutDropDelegate: DropDelegate {
 
@@ -1196,11 +1317,19 @@ struct LinkEditorView: View {
             )
             .textFieldStyle(.roundedBorder)
 
-            TextField(
-                "SF Symbol icon",
-                text: $item.icon
-            )
-            .textFieldStyle(.roundedBorder)
+            HStack(spacing: 8) {
+
+                TextField(
+                    "SF Symbol icon or image path",
+                    text: $item.icon
+                )
+                .textFieldStyle(.roundedBorder)
+
+                Button("Browse Icon") {
+
+                    browseForIconImage()
+                }
+            }
 
             if !item.isGroup {
 
@@ -1236,6 +1365,29 @@ struct LinkEditorView: View {
         }
         .padding(24)
         .frame(width: 420)
+    }
+    func browseForIconImage() {
+
+        let panel = NSOpenPanel()
+        panel.title = "Choose Link Icon Image"
+        panel.message = "Select an image file to use as this link icon."
+        panel.prompt = "Choose"
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [
+            .png,
+            .jpeg,
+            .tiff,
+            UTType(filenameExtension: "icns")!,
+            UTType(filenameExtension: "webp")!
+        ]
+
+        if panel.runModal() == .OK,
+           let selectedURL = panel.url {
+
+            item.icon = selectedURL.path
+        }
     }
 }
 
@@ -1275,17 +1427,33 @@ struct ShortcutEditorView: View {
             )
             .textFieldStyle(.roundedBorder)
 
-            TextField(
-                "SF Symbol icon",
-                text: $icon
-            )
-            .textFieldStyle(.roundedBorder)
+            HStack(spacing: 8) {
 
-            TextField(
-                "URL or App Path",
-                text: $url
-            )
-            .textFieldStyle(.roundedBorder)
+                TextField(
+                    "SF Symbol icon or image path",
+                    text: $icon
+                )
+                .textFieldStyle(.roundedBorder)
+
+                Button("Browse Icon") {
+
+                    browseForIconImage()
+                }
+            }
+
+            HStack(spacing: 8) {
+
+                TextField(
+                    "URL or App Path",
+                    text: $url
+                )
+                .textFieldStyle(.roundedBorder)
+
+                Button("Browse") {
+
+                    browseForApplication()
+                }
+            }
 
             HStack {
 
@@ -1312,9 +1480,56 @@ struct ShortcutEditorView: View {
         .padding(24)
         .frame(width: 420)
     }
+
+    func browseForApplication() {
+
+        let panel = NSOpenPanel()
+        panel.title = "Choose Application"
+        panel.message = "Select the app this software icon should open."
+        panel.prompt = "Choose"
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [.applicationBundle]
+        panel.directoryURL = URL(fileURLWithPath: "/Applications")
+
+        if panel.runModal() == .OK,
+           let selectedURL = panel.url {
+
+            url = selectedURL.path
+
+            if title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+
+                title = selectedURL.deletingPathExtension().lastPathComponent
+            }
+        }
+    }
+
+    func browseForIconImage() {
+
+        let panel = NSOpenPanel()
+        panel.title = "Choose Icon Image"
+        panel.message = "Select an image file to use as this software icon."
+        panel.prompt = "Choose"
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [
+            .png,
+            .jpeg,
+            .tiff,
+            UTType(filenameExtension: "icns")!,
+            UTType(filenameExtension: "webp")!
+        ]
+
+        if panel.runModal() == .OK,
+           let selectedURL = panel.url {
+
+            icon = selectedURL.path
+        }
+    }
 }
 
 #Preview {
-
     ContentView()
 }
