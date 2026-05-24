@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 2.5
-// Slightly brighter main content background
+// VERSION 2.6
+// Drag reorder links
 // Based on v1.9 stable
 // 2026-05-24
 
@@ -69,6 +69,7 @@ struct ContentView: View {
     @State private var showingAddShortcutSheet = false
 
     @State private var draggedShortcut: AppShortcut?
+    @State private var draggedLinkID: UUID?
 
     @State private var hoveringAddShortcut = false
     @State private var hoveringAddLink = false
@@ -403,6 +404,23 @@ struct ContentView: View {
                             openURL(visible.item.url)
                         }
                     }
+                    .onDrag {
+
+                        draggedLinkID = visible.item.id
+
+                        return NSItemProvider(
+                            object: visible.item.id.uuidString as NSString
+                        )
+                    }
+                    .onDrop(
+                        of: [.text],
+                        delegate: LinkReorderDropDelegate(
+                            targetID: visible.item.id,
+                            links: $links,
+                            draggedLinkID: $draggedLinkID,
+                            saveAction: saveLinks
+                        )
+                    )
                     .contextMenu {
 
                         Button("Edit") {
@@ -1001,6 +1019,153 @@ struct ShortcutDropDelegate: DropDelegate {
         saveAction()
 
         return true
+    }
+}
+
+struct LinkReorderDropDelegate: DropDelegate {
+
+    let targetID: UUID
+
+    @Binding var links: [LinkItem]
+
+    @Binding var draggedLinkID: UUID?
+
+    let saveAction: () -> Void
+
+    func dropEntered(info: DropInfo) {
+
+        guard let draggedLinkID,
+              draggedLinkID != targetID,
+              let draggedItem = findItem(draggedLinkID, in: links),
+              let targetItem = findItem(targetID, in: links)
+        else { return }
+
+        if itemContains(draggedItem, id: targetItem.id) {
+            return
+        }
+
+        withAnimation(.easeInOut(duration: 0.12)) {
+
+            moveItem(
+                draggedID: draggedLinkID,
+                before: targetID
+            )
+        }
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+
+        draggedLinkID = nil
+        saveAction()
+        return true
+    }
+
+    func moveItem(
+        draggedID: UUID,
+        before targetID: UUID
+    ) {
+
+        guard draggedID != targetID,
+              let movedItem = removeItem(draggedID, from: &links)
+        else { return }
+
+        if !insertItem(
+            movedItem,
+            before: targetID,
+            in: &links
+        ) {
+
+            links.append(movedItem)
+        }
+    }
+
+    func insertItem(
+        _ item: LinkItem,
+        before targetID: UUID,
+        in items: inout [LinkItem]
+    ) -> Bool {
+
+        if let targetIndex = items.firstIndex(where: { $0.id == targetID }) {
+
+            items.insert(item, at: targetIndex)
+            return true
+        }
+
+        for index in items.indices {
+
+            if insertItem(
+                item,
+                before: targetID,
+                in: &items[index].children
+            ) {
+
+                return true
+            }
+        }
+
+        return false
+    }
+
+    func removeItem(
+        _ id: UUID,
+        from items: inout [LinkItem]
+    ) -> LinkItem? {
+
+        if let index = items.firstIndex(where: { $0.id == id }) {
+
+            return items.remove(at: index)
+        }
+
+        for index in items.indices {
+
+            if let removed = removeItem(
+                id,
+                from: &items[index].children
+            ) {
+
+                return removed
+            }
+        }
+
+        return nil
+    }
+
+    func findItem(
+        _ id: UUID,
+        in items: [LinkItem]
+    ) -> LinkItem? {
+
+        for item in items {
+
+            if item.id == id {
+                return item
+            }
+
+            if let found = findItem(id, in: item.children) {
+                return found
+            }
+        }
+
+        return nil
+    }
+
+    func itemContains(
+        _ container: LinkItem,
+        id: UUID
+    ) -> Bool {
+
+        if container.id == id {
+            return true
+        }
+
+        for child in container.children {
+
+            if itemContains(child, id: id) {
+                return true
+            }
+        }
+
+        return false
     }
 }
 
