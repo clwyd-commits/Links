@@ -75,6 +75,9 @@ struct ContentView: View {
     @State private var hoveringAddShortcut = false
     @State private var hoveringAddLink = false
 
+    @State private var linkSaveTask: DispatchWorkItem?
+    @State private var shortcutSaveTask: DispatchWorkItem?
+
     let borderColor = Color.gray.opacity(0.28)
     let hoverBorderColor = Color.white.opacity(0.55)
     let frameCornerRadius: CGFloat = 10
@@ -137,7 +140,7 @@ struct ContentView: View {
                 ) { item in
 
                     links.append(item)
-                    saveLinks()
+                    scheduleSaveLinks()
                 }
 
             case .edit(let item):
@@ -145,7 +148,7 @@ struct ContentView: View {
                 LinkEditorView(item: item) { updatedItem in
 
                     updateItem(updatedItem, in: &links)
-                    saveLinks()
+                    scheduleSaveLinks()
                 }
 
             case .addChild(let parentID):
@@ -159,7 +162,7 @@ struct ContentView: View {
                 ) { item in
 
                     addChild(item, to: parentID, in: &links)
-                    saveLinks()
+                    scheduleSaveLinks()
                 }
             }
         }
@@ -179,7 +182,7 @@ struct ContentView: View {
                     )
                 )
 
-                saveShortcuts()
+                scheduleSaveShortcuts()
             }
         }
         .sheet(item: $selectedShortcut) { shortcut in
@@ -196,7 +199,7 @@ struct ContentView: View {
                     shortcuts[index].icon = icon
                     shortcuts[index].url = url
 
-                    saveShortcuts()
+                    scheduleSaveShortcuts()
                 }
             }
         }
@@ -283,7 +286,7 @@ struct ContentView: View {
                         targetShortcut: shortcut,
                         shortcuts: $shortcuts,
                         draggedShortcut: $draggedShortcut,
-                        saveAction: saveShortcuts
+                        saveAction: scheduleSaveShortcuts
                     )
                 )
                 .contextMenu {
@@ -302,7 +305,7 @@ struct ContentView: View {
                             $0.id == shortcut.id
                         }
 
-                        saveShortcuts()
+                        scheduleSaveShortcuts()
                     }
                 }
             }
@@ -398,7 +401,7 @@ struct ContentView: View {
                                 in: &links
                             )
 
-                            saveLinks()
+                            scheduleSaveLinks()
 
                         } else {
 
@@ -419,7 +422,7 @@ struct ContentView: View {
                             targetID: visible.item.id,
                             links: $links,
                             draggedLinkID: $draggedLinkID,
-                            saveAction: saveLinks
+                            saveAction: scheduleSaveLinks
                         )
                     )
                     .contextMenu {
@@ -451,7 +454,7 @@ struct ContentView: View {
                                 from: &links
                             )
 
-                            saveLinks()
+                            scheduleSaveLinks()
                         }
                     }
                 }
@@ -594,7 +597,30 @@ struct ContentView: View {
             NSWorkspace.shared.open(url)
         }
     }
+    func scheduleSaveLinks() {
 
+        linkSaveTask?.cancel()
+
+        let snapshot = links
+
+        let task = DispatchWorkItem {
+
+            if let data = try? JSONEncoder().encode(snapshot) {
+
+                UserDefaults.standard.set(
+                    data,
+                    forKey: "SavedLinkItemsV2"
+                )
+            }
+        }
+
+        linkSaveTask = task
+
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.35,
+            execute: task
+        )
+    }
     func saveLinks() {
 
         if let data = try? JSONEncoder().encode(links) {
@@ -656,7 +682,30 @@ struct ContentView: View {
             ]
         }
     }
+    func scheduleSaveShortcuts() {
 
+        shortcutSaveTask?.cancel()
+
+        let snapshot = shortcuts
+
+        let task = DispatchWorkItem {
+
+            if let data = try? JSONEncoder().encode(snapshot) {
+
+                UserDefaults.standard.set(
+                    data,
+                    forKey: "SavedShortcuts"
+                )
+            }
+        }
+
+        shortcutSaveTask = task
+
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.35,
+            execute: task
+        )
+    }
     func saveShortcuts() {
 
         if let data = try? JSONEncoder().encode(shortcuts) {
@@ -1386,7 +1435,47 @@ struct LinkEditorView: View {
         if panel.runModal() == .OK,
            let selectedURL = panel.url {
 
-            item.icon = selectedURL.path
+            if let copiedURL = copyIconToAppSupport(selectedURL) {
+
+                item.icon = copiedURL.path
+            }
+        }
+    }
+
+    func copyIconToAppSupport(_ sourceURL: URL) -> URL? {
+
+        let supportFolder = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        )[0]
+
+        let iconFolder = supportFolder.appendingPathComponent(
+            "LinksApp/Icons",
+            isDirectory: true
+        )
+
+        try? FileManager.default.createDirectory(
+            at: iconFolder,
+            withIntermediateDirectories: true
+        )
+
+        let destinationURL = iconFolder.appendingPathComponent(
+            UUID().uuidString + "-" + sourceURL.lastPathComponent
+        )
+
+        do {
+
+            try FileManager.default.copyItem(
+                at: sourceURL,
+                to: destinationURL
+            )
+
+            return destinationURL
+
+        } catch {
+
+            print("Could not copy link icon:", error)
+            return nil
         }
     }
 }
@@ -1525,7 +1614,47 @@ struct ShortcutEditorView: View {
         if panel.runModal() == .OK,
            let selectedURL = panel.url {
 
-            icon = selectedURL.path
+            if let copiedURL = copyIconToAppSupport(selectedURL) {
+
+                icon = copiedURL.path
+            }
+        }
+    }
+
+    func copyIconToAppSupport(_ sourceURL: URL) -> URL? {
+
+        let supportFolder = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        )[0]
+
+        let iconFolder = supportFolder.appendingPathComponent(
+            "LinksApp/Icons",
+            isDirectory: true
+        )
+
+        try? FileManager.default.createDirectory(
+            at: iconFolder,
+            withIntermediateDirectories: true
+        )
+
+        let destinationURL = iconFolder.appendingPathComponent(
+            UUID().uuidString + "-" + sourceURL.lastPathComponent
+        )
+
+        do {
+
+            try FileManager.default.copyItem(
+                at: sourceURL,
+                to: destinationURL
+            )
+
+            return destinationURL
+
+        } catch {
+
+            print("Could not copy shortcut icon:", error)
+            return nil
         }
     }
 }
