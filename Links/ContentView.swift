@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 2.3
-// Expandable groups + wrapping software icon rows
+// VERSION 2.5
+// Slightly brighter main content background
 // Based on v1.9 stable
 // 2026-05-24
 
@@ -98,6 +98,7 @@ struct ContentView: View {
                 }
                 .padding(22)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.white.opacity(0.025))
 
                 sideBorder
             }
@@ -930,7 +931,7 @@ struct HoverLinkRow: View {
                 CGFloat(level) * 24
             )
             .frame(height: 46)
-            .background(.white.opacity(0.025))
+            .background(.white.opacity(0.05))
             .clipShape(
                 RoundedRectangle(cornerRadius: 10)
             )
