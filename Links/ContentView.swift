@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 3.8 CLEAN
-// Stable autosave + persistent icon storage
+// VERSION 3.9a
+// UI zoom controls only
 // 2026-05-24
 
 import SwiftUI
