@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.8
+// VERSION 3.8 CLEAN
 // Stable autosave + persistent icon storage
 // 2026-05-24
 
@@ -79,10 +79,11 @@ struct ContentView: View {
 
     let borderColor = Color.gray.opacity(0.28)
     let hoverBorderColor = Color.white.opacity(0.55)
-    let frameCornerRadius: CGFloat = 10
-    let innerFrameInset: CGFloat = 24
+    let panelFill = Color.white.opacity(0.025)
     let shortcutIconSize: CGFloat = 69
     let shortcutIconSpacing: CGFloat = 6
+    let frameCornerRadius: CGFloat = 10
+    let innerFrameInset: CGFloat = 24
 
     var body: some View {
 
@@ -102,7 +103,7 @@ struct ContentView: View {
                 }
                 .padding(22)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.white.opacity(0.025))
+                .background(panelFill)
 
                 sideBorder
             }
@@ -364,10 +365,7 @@ struct ContentView: View {
         }
     }
 
-    func shortcutIcon(
-        _ shortcut: AppShortcut
-    ) -> some View {
-
+    func shortcutIcon(_ shortcut: AppShortcut) -> some View {
         HoverShortcutIcon(
             shortcut: shortcut,
             borderColor: borderColor,
@@ -546,7 +544,7 @@ struct ContentView: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 46)
-            .background(.white.opacity(0.025))
+            .background(panelFill)
             .clipShape(
                 RoundedRectangle(cornerRadius: 10)
             )
@@ -619,16 +617,6 @@ struct ContentView: View {
             deadline: .now() + 0.35,
             execute: task
         )
-    }
-    func saveLinks() {
-
-        if let data = try? JSONEncoder().encode(links) {
-
-            UserDefaults.standard.set(
-                data,
-                forKey: "SavedLinkItemsV2"
-            )
-        }
     }
 
     func loadLinks() {
@@ -704,16 +692,6 @@ struct ContentView: View {
             deadline: .now() + 0.35,
             execute: task
         )
-    }
-    func saveShortcuts() {
-
-        if let data = try? JSONEncoder().encode(shortcuts) {
-
-            UserDefaults.standard.set(
-                data,
-                forKey: "SavedShortcuts"
-            )
-        }
     }
 
     func loadShortcuts() {
@@ -920,36 +898,39 @@ struct HoverShortcutIcon: View {
     }
 
     var iconColor: Color {
-
-        if shortcut.title.lowercased() ==
-            "youtube" &&
-            hovering {
-
+        if shortcut.title.lowercased() == "youtube" && hovering {
             return .red
         }
-
         return .white.opacity(0.82)
     }
-    
-    func isApplicationPath(_ path: String) -> Bool {
+}
 
-        path.hasSuffix(".app") && FileManager.default.fileExists(atPath: path)
+func isApplicationPath(_ path: String) -> Bool {
+    path.hasSuffix(".app") && FileManager.default.fileExists(atPath: path)
+}
+
+func faviconURL(for urlString: String) -> URL? {
+    guard let url = URL(string: urlString),
+          let scheme = url.scheme?.lowercased(),
+          scheme == "http" || scheme == "https",
+          let host = url.host,
+          !host.isEmpty else {
+        return nil
     }
+    return URL(string: "https://www.google.com/s2/favicons?sz=64&domain=\(host)")
+}
 
-    func isImagePath(_ path: String) -> Bool {
-
-        let lowercasedPath = path.lowercased()
-
-        return FileManager.default.fileExists(atPath: path) &&
-            (
-                lowercasedPath.hasSuffix(".png") ||
-                lowercasedPath.hasSuffix(".jpg") ||
-                lowercasedPath.hasSuffix(".jpeg") ||
-                lowercasedPath.hasSuffix(".icns") ||
-                lowercasedPath.hasSuffix(".tiff") ||
-                lowercasedPath.hasSuffix(".webp")
-            )
-    }
+func isImagePath(_ path: String) -> Bool {
+    let lowercasedPath = path.lowercased()
+    return FileManager.default.fileExists(atPath: path) &&
+        (
+            lowercasedPath.hasSuffix(".png") ||
+            lowercasedPath.hasSuffix(".jpg") ||
+            lowercasedPath.hasSuffix(".jpeg") ||
+            lowercasedPath.hasSuffix(".icns") ||
+            lowercasedPath.hasSuffix(".tiff") ||
+            lowercasedPath.hasSuffix(".webp")
+        )
 }
 
 struct HoverLinkRow: View {
@@ -1109,39 +1090,6 @@ struct HoverLinkRow: View {
     }
 }
 
-    func isApplicationPath(_ path: String) -> Bool {
-
-        path.hasSuffix(".app") && FileManager.default.fileExists(atPath: path)
-    }
-
-    func faviconURL(for urlString: String) -> URL? {
-
-        guard let url = URL(string: urlString),
-              let scheme = url.scheme?.lowercased(),
-              scheme == "http" || scheme == "https",
-              let host = url.host,
-              !host.isEmpty else {
-
-            return nil
-        }
-
-        return URL(string: "https://www.google.com/s2/favicons?sz=64&domain=\(host)")
-    }
-
-    func isImagePath(_ path: String) -> Bool {
-
-        let lowercasedPath = path.lowercased()
-
-        return FileManager.default.fileExists(atPath: path) &&
-            (
-                lowercasedPath.hasSuffix(".png") ||
-                lowercasedPath.hasSuffix(".jpg") ||
-                lowercasedPath.hasSuffix(".jpeg") ||
-                lowercasedPath.hasSuffix(".icns") ||
-                lowercasedPath.hasSuffix(".tiff") ||
-                lowercasedPath.hasSuffix(".webp")
-            )
-    }
 
 struct ShortcutDropDelegate: DropDelegate {
 
