@@ -1,7 +1,7 @@
 // LINKS APP
-// VERSION 3.9a
-// UI zoom controls only
-// 2026-05-24
+// VERSION 3.9b
+// Cmd+= zoom in / Cmd+- zoom out / Cmd+0 reset
+// 2026-05-27
 
 import SwiftUI
 import UniformTypeIdentifiers
@@ -77,11 +77,17 @@ struct ContentView: View {
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
 
+    @AppStorage("zoomStep") private var zoomStep: Int = 3
+
+    let zoomSteps: [CGFloat] = [0.70, 0.82, 0.91, 1.00, 1.12, 1.25, 1.40]
+
+    var zoomFactor: CGFloat { zoomSteps[zoomStep] }
+
     let borderColor = Color.gray.opacity(0.28)
     let hoverBorderColor = Color.white.opacity(0.55)
     let panelFill = Color.white.opacity(0.025)
-    let shortcutIconSize: CGFloat = 69
-    let shortcutIconSpacing: CGFloat = 6
+    var shortcutIconSize: CGFloat { 69 * zoomFactor }
+    var shortcutIconSpacing: CGFloat { 6 * zoomFactor }
     let frameCornerRadius: CGFloat = 10
     let innerFrameInset: CGFloat = 24
 
@@ -203,6 +209,20 @@ struct ContentView: View {
                 }
             }
         }
+        .overlay(
+            Group {
+
+                Button("") { zoomIn() }
+                    .keyboardShortcut("=", modifiers: .command)
+
+                Button("") { zoomOut() }
+                    .keyboardShortcut("-", modifiers: .command)
+
+                Button("") { zoomReset() }
+                    .keyboardShortcut("0", modifiers: .command)
+            }
+            .opacity(0)
+        )
     }
 
     var background: some View {
@@ -369,7 +389,8 @@ struct ContentView: View {
         HoverShortcutIcon(
             shortcut: shortcut,
             borderColor: borderColor,
-            hoverBorderColor: hoverBorderColor
+            hoverBorderColor: hoverBorderColor,
+            iconSize: shortcutIconSize
         )
     }
 
@@ -388,7 +409,8 @@ struct ContentView: View {
                         link: visible.item,
                         level: visible.level,
                         borderColor: borderColor,
-                        hoverBorderColor: hoverBorderColor
+                        hoverBorderColor: hoverBorderColor,
+                        zoomFactor: zoomFactor
                     ) {
 
                         if visible.item.isGroup {
@@ -573,6 +595,20 @@ struct ContentView: View {
         Rectangle()
             .fill(Color.black.opacity(0.22))
             .frame(height: 24)
+    }
+
+    func zoomIn() {
+        guard zoomStep < zoomSteps.count - 1 else { return }
+        withAnimation(.easeOut(duration: 0.15)) { zoomStep += 1 }
+    }
+
+    func zoomOut() {
+        guard zoomStep > 0 else { return }
+        withAnimation(.easeOut(duration: 0.15)) { zoomStep -= 1 }
+    }
+
+    func zoomReset() {
+        withAnimation(.easeOut(duration: 0.15)) { zoomStep = 3 }
     }
 
     func openURL(_ target: String) {
@@ -841,6 +877,7 @@ struct HoverShortcutIcon: View {
     let shortcut: AppShortcut
     let borderColor: Color
     let hoverBorderColor: Color
+    let iconSize: CGFloat
 
     @State private var hovering = false
 
@@ -864,7 +901,7 @@ struct HoverShortcutIcon: View {
                 Image(nsImage: customIcon)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 69, height: 69)
+                    .frame(width: iconSize, height: iconSize)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
             } else if isApplicationPath(shortcut.url) {
@@ -872,7 +909,7 @@ struct HoverShortcutIcon: View {
                 Image(nsImage: NSWorkspace.shared.icon(forFile: shortcut.url))
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 69, height: 69)
+                    .frame(width: iconSize, height: iconSize)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
             } else {
@@ -880,14 +917,14 @@ struct HoverShortcutIcon: View {
                 Image(systemName: shortcut.icon)
                     .font(
                         .system(
-                            size: 27,
+                            size: 27 * (iconSize / 69),
                             weight: .bold
                         )
                     )
                     .foregroundStyle(iconColor)
             }
         }
-        .frame(width: 69, height: 69)
+        .frame(width: iconSize, height: iconSize)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
@@ -940,6 +977,7 @@ struct HoverLinkRow: View {
 
     let borderColor: Color
     let hoverBorderColor: Color
+    let zoomFactor: CGFloat
 
     let openAction: () -> Void
 
@@ -974,14 +1012,14 @@ struct HoverLinkRow: View {
                         Image(nsImage: customIcon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26, height: 26)
+                            .frame(width: 26 * zoomFactor, height: 26 * zoomFactor)
 
                     } else if isApplicationPath(link.url) {
 
                         Image(nsImage: NSWorkspace.shared.icon(forFile: link.url))
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26, height: 26)
+                            .frame(width: 26 * zoomFactor, height: 26 * zoomFactor)
 
                     } else if let faviconURL = faviconURL(for: link.url) {
 
@@ -994,14 +1032,14 @@ struct HoverLinkRow: View {
                                 image
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 26, height: 26)
+                                    .frame(width: 26 * zoomFactor, height: 26 * zoomFactor)
 
                             default:
 
                                 Image(systemName: link.icon)
                                     .font(
                                         .system(
-                                            size: 14,
+                                            size: 14 * zoomFactor,
                                             weight: .bold
                                         )
                                     )
@@ -1016,7 +1054,7 @@ struct HoverLinkRow: View {
                         Image(systemName: link.icon)
                             .font(
                                 .system(
-                                    size: 14,
+                                    size: 14 * zoomFactor,
                                     weight: .bold
                                 )
                             )
@@ -1025,12 +1063,12 @@ struct HoverLinkRow: View {
                             )
                     }
                 }
-                .frame(width: 30, height: 30)
+                .frame(width: 30 * zoomFactor, height: 30 * zoomFactor)
 
                 Text(link.title)
                     .font(
                         .system(
-                            size: 13,
+                            size: 13 * zoomFactor,
                             weight: .medium
                         )
                     )
@@ -1050,7 +1088,7 @@ struct HoverLinkRow: View {
                     )
                     .font(
                         .system(
-                            size: 11,
+                            size: 11 * zoomFactor,
                             weight: .medium
                         )
                     )
@@ -1060,7 +1098,7 @@ struct HoverLinkRow: View {
                 }
             }
             .padding(.horizontal, 14)
-            .frame(height: 46)
+            .frame(height: 46 * zoomFactor)
             .background(.white.opacity(0.05))
             .clipShape(
                 RoundedRectangle(cornerRadius: 10)
@@ -1076,7 +1114,7 @@ struct HoverLinkRow: View {
             )
             .padding(
                 .leading,
-                CGFloat(level) * 24
+                CGFloat(level) * 24 * zoomFactor
             )
         }
         .buttonStyle(.plain)
