@@ -57,6 +57,8 @@ enum LinkEditorMode: Identifiable {
     }
 }
 
+private let defaultZoomStep = 3
+
 struct ContentView: View {
 
     @State private var links: [LinkItem] = []
@@ -76,12 +78,15 @@ struct ContentView: View {
 
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
+    @State private var keyMonitor: Any?
 
-    @AppStorage("zoomStep") private var zoomStep: Int = 3
+    @AppStorage("zoomStep") private var zoomStep: Int = defaultZoomStep
 
     let zoomSteps: [CGFloat] = [0.70, 0.82, 0.91, 1.00, 1.12, 1.25, 1.40]
 
-    var zoomFactor: CGFloat { zoomSteps[zoomStep] }
+    var zoomFactor: CGFloat {
+        zoomSteps[max(0, min(zoomStep, zoomSteps.count - 1))]
+    }
 
     let borderColor = Color.gray.opacity(0.28)
     let hoverBorderColor = Color.white.opacity(0.55)
@@ -210,11 +215,20 @@ struct ContentView: View {
             loadShortcuts()
             startKeyMonitor()
         }
+        .onDisappear {
+
+            if let monitor = keyMonitor {
+                NSEvent.removeMonitor(monitor)
+                keyMonitor = nil
+            }
+        }
     }
 
     func startKeyMonitor() {
 
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+        guard keyMonitor == nil else { return }
+
+        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
 
             guard event.modifierFlags.contains(.command) else {
                 return event
@@ -623,7 +637,7 @@ struct ContentView: View {
     }
 
     func zoomReset() {
-        withAnimation(.easeOut(duration: 0.15)) { zoomStep = 3 }
+        withAnimation(.easeOut(duration: 0.15)) { zoomStep = defaultZoomStep }
     }
 
     func openURL(_ target: String) {
@@ -970,6 +984,43 @@ func faviconURL(for urlString: String) -> URL? {
         return nil
     }
     return URL(string: "https://www.google.com/s2/favicons?sz=64&domain=\(host)")
+}
+
+func copyIconToAppSupport(_ sourceURL: URL) -> URL? {
+
+    let supportFolder = FileManager.default.urls(
+        for: .applicationSupportDirectory,
+        in: .userDomainMask
+    )[0]
+
+    let iconFolder = supportFolder.appendingPathComponent(
+        "LinksApp/Icons",
+        isDirectory: true
+    )
+
+    try? FileManager.default.createDirectory(
+        at: iconFolder,
+        withIntermediateDirectories: true
+    )
+
+    let destinationURL = iconFolder.appendingPathComponent(
+        UUID().uuidString + "-" + sourceURL.lastPathComponent
+    )
+
+    do {
+
+        try FileManager.default.copyItem(
+            at: sourceURL,
+            to: destinationURL
+        )
+
+        return destinationURL
+
+    } catch {
+
+        print("Could not copy icon:", error)
+        return nil
+    }
 }
 
 func isImagePath(_ path: String) -> Bool {
@@ -1424,13 +1475,10 @@ struct LinkEditorView: View {
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
-        panel.allowedContentTypes = [
-            .png,
-            .jpeg,
-            .tiff,
-            UTType(filenameExtension: "icns")!,
-            UTType(filenameExtension: "webp")!
-        ]
+        var iconTypes: [UTType] = [.png, .jpeg, .tiff]
+        if let icns = UTType(filenameExtension: "icns") { iconTypes.append(icns) }
+        if let webp = UTType(filenameExtension: "webp") { iconTypes.append(webp) }
+        panel.allowedContentTypes = iconTypes
 
         if panel.runModal() == .OK,
            let selectedURL = panel.url {
@@ -1442,42 +1490,6 @@ struct LinkEditorView: View {
         }
     }
 
-    func copyIconToAppSupport(_ sourceURL: URL) -> URL? {
-
-        let supportFolder = FileManager.default.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        )[0]
-
-        let iconFolder = supportFolder.appendingPathComponent(
-            "LinksApp/Icons",
-            isDirectory: true
-        )
-
-        try? FileManager.default.createDirectory(
-            at: iconFolder,
-            withIntermediateDirectories: true
-        )
-
-        let destinationURL = iconFolder.appendingPathComponent(
-            UUID().uuidString + "-" + sourceURL.lastPathComponent
-        )
-
-        do {
-
-            try FileManager.default.copyItem(
-                at: sourceURL,
-                to: destinationURL
-            )
-
-            return destinationURL
-
-        } catch {
-
-            print("Could not copy link icon:", error)
-            return nil
-        }
-    }
 }
 
 struct ShortcutEditorView: View {
@@ -1603,13 +1615,10 @@ struct ShortcutEditorView: View {
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
-        panel.allowedContentTypes = [
-            .png,
-            .jpeg,
-            .tiff,
-            UTType(filenameExtension: "icns")!,
-            UTType(filenameExtension: "webp")!
-        ]
+        var iconTypes: [UTType] = [.png, .jpeg, .tiff]
+        if let icns = UTType(filenameExtension: "icns") { iconTypes.append(icns) }
+        if let webp = UTType(filenameExtension: "webp") { iconTypes.append(webp) }
+        panel.allowedContentTypes = iconTypes
 
         if panel.runModal() == .OK,
            let selectedURL = panel.url {
@@ -1621,42 +1630,6 @@ struct ShortcutEditorView: View {
         }
     }
 
-    func copyIconToAppSupport(_ sourceURL: URL) -> URL? {
-
-        let supportFolder = FileManager.default.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        )[0]
-
-        let iconFolder = supportFolder.appendingPathComponent(
-            "LinksApp/Icons",
-            isDirectory: true
-        )
-
-        try? FileManager.default.createDirectory(
-            at: iconFolder,
-            withIntermediateDirectories: true
-        )
-
-        let destinationURL = iconFolder.appendingPathComponent(
-            UUID().uuidString + "-" + sourceURL.lastPathComponent
-        )
-
-        do {
-
-            try FileManager.default.copyItem(
-                at: sourceURL,
-                to: destinationURL
-            )
-
-            return destinationURL
-
-        } catch {
-
-            print("Could not copy shortcut icon:", error)
-            return nil
-        }
-    }
 }
 
 #Preview {
