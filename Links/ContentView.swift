@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 3.9b
-// Cmd+= zoom in / Cmd+- zoom out / Cmd+0 reset
+// VERSION 3.10
+// Split zoom: icons and links scale independently
 // 2026-05-27
 
 import SwiftUI
@@ -80,19 +80,24 @@ struct ContentView: View {
     @State private var shortcutSaveTask: DispatchWorkItem?
     @State private var keyMonitor: Any?
 
-    @AppStorage("zoomStep") private var zoomStep: Int = defaultZoomStep
+    @AppStorage("iconZoomStep") private var iconZoomStep: Int = defaultZoomStep
+    @AppStorage("linkZoomStep") private var linkZoomStep: Int = defaultZoomStep
 
     let zoomSteps: [CGFloat] = [0.70, 0.82, 0.91, 1.00, 1.12, 1.25, 1.40]
 
-    var zoomFactor: CGFloat {
-        zoomSteps[max(0, min(zoomStep, zoomSteps.count - 1))]
+    var iconZoomFactor: CGFloat {
+        zoomSteps[max(0, min(iconZoomStep, zoomSteps.count - 1))]
+    }
+
+    var linkZoomFactor: CGFloat {
+        zoomSteps[max(0, min(linkZoomStep, zoomSteps.count - 1))]
     }
 
     let borderColor = Color.gray.opacity(0.28)
     let hoverBorderColor = Color.white.opacity(0.55)
     let panelFill = Color.white.opacity(0.025)
-    var shortcutIconSize: CGFloat { 69 * zoomFactor }
-    var shortcutIconSpacing: CGFloat { 6 * zoomFactor }
+    var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
+    var shortcutIconSpacing: CGFloat { 6 * iconZoomFactor }
     let frameCornerRadius: CGFloat = 10
     let innerFrameInset: CGFloat = 24
 
@@ -360,6 +365,8 @@ struct ContentView: View {
             }
 
             addShortcutButton
+
+            iconScaleStepper
         }
         .padding(.leading, 18)
         .padding(.top, 18)
@@ -439,7 +446,7 @@ struct ContentView: View {
                         level: visible.level,
                         borderColor: borderColor,
                         hoverBorderColor: hoverBorderColor,
-                        zoomFactor: zoomFactor
+                        zoomFactor: linkZoomFactor
                     ) {
 
                         if visible.item.isGroup {
@@ -508,6 +515,8 @@ struct ContentView: View {
                 }
 
                 addLinkRow
+
+                linkScaleStepper
             }
             .padding(.horizontal, 18)
             .padding(.bottom, 18)
@@ -619,6 +628,77 @@ struct ContentView: View {
         }
     }
 
+    var iconScaleStepper: some View {
+
+        VStack(spacing: 3) {
+
+            Button { zoomIconIn() } label: {
+
+                Image(systemName: "plus")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.30))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .buttonStyle(.plain)
+
+            Divider()
+                .background(Color.white.opacity(0.08))
+
+            Button { zoomIconOut() } label: {
+
+                Image(systemName: "minus")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.30))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(width: shortcutIconSize, height: shortcutIconSize)
+        .background(.black.opacity(0.14))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(borderColor, lineWidth: 0.5)
+        )
+    }
+
+    var linkScaleStepper: some View {
+
+        HStack(spacing: 0) {
+
+            Button { zoomLinkOut() } label: {
+
+                Image(systemName: "minus")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.30))
+                    .frame(width: 36, height: 28)
+            }
+            .buttonStyle(.plain)
+
+            Divider()
+                .frame(height: 14)
+                .background(Color.white.opacity(0.08))
+
+            Button { zoomLinkIn() } label: {
+
+                Image(systemName: "plus")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.30))
+                    .frame(width: 36, height: 28)
+            }
+            .buttonStyle(.plain)
+        }
+        .background(.black.opacity(0.14))
+        .clipShape(RoundedRectangle(cornerRadius: 7))
+        .overlay(
+            RoundedRectangle(cornerRadius: 7)
+                .stroke(borderColor, lineWidth: 0.5)
+        )
+        .padding(.horizontal, 14)
+        .padding(.top, 4)
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+
     var bottomBar: some View {
 
         Rectangle()
@@ -626,18 +706,47 @@ struct ContentView: View {
             .frame(height: 24)
     }
 
+    // Global hotkeys — step both scales together
     func zoomIn() {
-        guard zoomStep < zoomSteps.count - 1 else { return }
-        withAnimation(.easeOut(duration: 0.15)) { zoomStep += 1 }
+        withAnimation(.easeOut(duration: 0.15)) {
+            if iconZoomStep < zoomSteps.count - 1 { iconZoomStep += 1 }
+            if linkZoomStep < zoomSteps.count - 1 { linkZoomStep += 1 }
+        }
     }
 
     func zoomOut() {
-        guard zoomStep > 0 else { return }
-        withAnimation(.easeOut(duration: 0.15)) { zoomStep -= 1 }
+        withAnimation(.easeOut(duration: 0.15)) {
+            if iconZoomStep > 0 { iconZoomStep -= 1 }
+            if linkZoomStep > 0 { linkZoomStep -= 1 }
+        }
     }
 
     func zoomReset() {
-        withAnimation(.easeOut(duration: 0.15)) { zoomStep = defaultZoomStep }
+        withAnimation(.easeOut(duration: 0.15)) {
+            iconZoomStep = defaultZoomStep
+            linkZoomStep = defaultZoomStep
+        }
+    }
+
+    // Per-section controls
+    func zoomIconIn() {
+        guard iconZoomStep < zoomSteps.count - 1 else { return }
+        withAnimation(.easeOut(duration: 0.15)) { iconZoomStep += 1 }
+    }
+
+    func zoomIconOut() {
+        guard iconZoomStep > 0 else { return }
+        withAnimation(.easeOut(duration: 0.15)) { iconZoomStep -= 1 }
+    }
+
+    func zoomLinkIn() {
+        guard linkZoomStep < zoomSteps.count - 1 else { return }
+        withAnimation(.easeOut(duration: 0.15)) { linkZoomStep += 1 }
+    }
+
+    func zoomLinkOut() {
+        guard linkZoomStep > 0 else { return }
+        withAnimation(.easeOut(duration: 0.15)) { linkZoomStep -= 1 }
     }
 
     func openURL(_ target: String) {
