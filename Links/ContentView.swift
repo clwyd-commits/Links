@@ -116,6 +116,8 @@ struct ContentView: View {
                     shortcutRow
 
                     linkList
+
+                    linkScaleStepper
                 }
                 .padding(22)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -300,7 +302,7 @@ struct ContentView: View {
 
     var shortcutRow: some View {
 
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 18) {
 
             iconScaleStepper
 
@@ -377,7 +379,6 @@ struct ContentView: View {
 
         }
         .padding(.leading, 18)
-        .padding(.top, 8)
         .padding(.bottom, 2)
         .frame(
             maxWidth: .infinity,
@@ -677,46 +678,40 @@ struct ContentView: View {
             Button { zoomLinkOut() } label: {
 
                 Image(systemName: "minus")
-                    .font(.system(size: 10, weight: .medium))
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 32, height: 18)
+                    .frame(width: 36, height: 24)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
 
             Divider()
-                .frame(height: 10)
+                .frame(height: 12)
 
             Button { zoomLinkIn() } label: {
 
                 Image(systemName: "plus")
-                    .font(.system(size: 10, weight: .medium))
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 32, height: 18)
+                    .frame(width: 36, height: 24)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
         }
-        .background(.black.opacity(0.18))
-        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .background(.black.opacity(0.14))
+        .clipShape(RoundedRectangle(cornerRadius: 6))
         .overlay(
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: 6)
                 .stroke(borderColor, lineWidth: 0.5)
         )
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var bottomBar: some View {
 
-        HStack {
-
-            Spacer()
-
-            linkScaleStepper
-
-            Spacer()
-        }
-        .frame(height: 24)
-        .background(Color.black.opacity(0.22))
+        Rectangle()
+            .fill(Color.black.opacity(0.22))
+            .frame(height: 24)
     }
 
     // Global hotkeys — step both scales together
