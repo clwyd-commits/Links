@@ -57,7 +57,7 @@ enum LinkEditorMode: Identifiable {
     }
 }
 
-private let defaultZoomStep = 3
+private let defaultZoomStep = 5
 
 struct ContentView: View {
 
@@ -83,7 +83,7 @@ struct ContentView: View {
     @AppStorage("iconZoomStep") private var iconZoomStep: Int = defaultZoomStep
     @AppStorage("linkZoomStep") private var linkZoomStep: Int = defaultZoomStep
 
-    let zoomSteps: [CGFloat] = [0.70, 0.82, 0.91, 1.00, 1.12, 1.25, 1.40]
+    let zoomSteps: [CGFloat] = [0.40, 0.55, 0.70, 0.82, 0.91, 1.00, 1.12, 1.25, 1.40, 1.60, 1.85, 2.20]
 
     var iconZoomFactor: CGFloat {
         zoomSteps[max(0, min(iconZoomStep, zoomSteps.count - 1))]
@@ -630,7 +630,7 @@ struct ContentView: View {
 
     var iconScaleStepper: some View {
 
-        VStack(spacing: 3) {
+        VStack(spacing: 0) {
 
             Button { zoomIconIn() } label: {
 
@@ -640,6 +640,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .buttonStyle(.plain)
+            .contentShape(Rectangle())
 
             Divider()
                 .background(Color.white.opacity(0.08))
@@ -652,8 +653,9 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .buttonStyle(.plain)
+            .contentShape(Rectangle())
         }
-        .frame(width: shortcutIconSize, height: shortcutIconSize)
+        .frame(width: shortcutIconSize * 0.5, height: shortcutIconSize)
         .background(.black.opacity(0.14))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay(
@@ -674,6 +676,7 @@ struct ContentView: View {
                     .frame(width: 36, height: 28)
             }
             .buttonStyle(.plain)
+            .contentShape(Rectangle())
 
             Divider()
                 .frame(height: 14)
@@ -687,6 +690,7 @@ struct ContentView: View {
                     .frame(width: 36, height: 28)
             }
             .buttonStyle(.plain)
+            .contentShape(Rectangle())
         }
         .background(.black.opacity(0.14))
         .clipShape(RoundedRectangle(cornerRadius: 7))
