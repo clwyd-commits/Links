@@ -300,7 +300,11 @@ struct ContentView: View {
 
     var shortcutRow: some View {
 
-        LazyVGrid(
+        VStack(alignment: .leading, spacing: 8) {
+
+            iconScaleStepper
+
+            LazyVGrid(
             columns: [
                 GridItem(
                     .adaptive(
@@ -365,11 +369,15 @@ struct ContentView: View {
             }
 
             addShortcutButton
+        }
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
 
-            iconScaleStepper
         }
         .padding(.leading, 18)
-        .padding(.top, 18)
+        .padding(.top, 8)
         .padding(.bottom, 2)
         .frame(
             maxWidth: .infinity,
@@ -515,8 +523,6 @@ struct ContentView: View {
                 }
 
                 addLinkRow
-
-                linkScaleStepper
             }
             .padding(.horizontal, 18)
             .padding(.bottom, 18)
@@ -630,38 +636,38 @@ struct ContentView: View {
 
     var iconScaleStepper: some View {
 
-        VStack(spacing: 0) {
-
-            Button { zoomIconIn() } label: {
-
-                Image(systemName: "plus")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .buttonStyle(.plain)
-            .contentShape(Rectangle())
-
-            Divider()
-                .background(Color.white.opacity(0.08))
+        HStack(spacing: 0) {
 
             Button { zoomIconOut() } label: {
 
                 Image(systemName: "minus")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(width: 36, height: 24)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .contentShape(Rectangle())
+
+            Divider()
+                .frame(height: 12)
+
+            Button { zoomIconIn() } label: {
+
+                Image(systemName: "plus")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.30))
+                    .frame(width: 36, height: 24)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
         }
-        .frame(width: shortcutIconSize * 0.5, height: shortcutIconSize)
         .background(.black.opacity(0.14))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 6))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 6)
                 .stroke(borderColor, lineWidth: 0.5)
         )
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var linkScaleStepper: some View {
@@ -671,43 +677,46 @@ struct ContentView: View {
             Button { zoomLinkOut() } label: {
 
                 Image(systemName: "minus")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 28)
+                    .frame(width: 32, height: 18)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .contentShape(Rectangle())
 
             Divider()
-                .frame(height: 14)
-                .background(Color.white.opacity(0.08))
+                .frame(height: 10)
 
             Button { zoomLinkIn() } label: {
 
                 Image(systemName: "plus")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 28)
+                    .frame(width: 32, height: 18)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .contentShape(Rectangle())
         }
-        .background(.black.opacity(0.14))
-        .clipShape(RoundedRectangle(cornerRadius: 7))
+        .background(.black.opacity(0.18))
+        .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
-            RoundedRectangle(cornerRadius: 7)
+            RoundedRectangle(cornerRadius: 5)
                 .stroke(borderColor, lineWidth: 0.5)
         )
-        .padding(.horizontal, 14)
-        .padding(.top, 4)
-        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var bottomBar: some View {
 
-        Rectangle()
-            .fill(Color.black.opacity(0.22))
-            .frame(height: 24)
+        HStack {
+
+            Spacer()
+
+            linkScaleStepper
+
+            Spacer()
+        }
+        .frame(height: 24)
+        .background(Color.black.opacity(0.22))
     }
 
     // Global hotkeys — step both scales together
