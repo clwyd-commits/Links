@@ -126,11 +126,6 @@ struct ContentView: View {
                 .padding(innerFrameInset)
         )
         .preferredColorScheme(.dark)
-        .onAppear {
-
-            loadLinks()
-            loadShortcuts()
-        }
         .sheet(item: $linkEditorMode) { mode in
 
             switch mode {
@@ -209,20 +204,40 @@ struct ContentView: View {
                 }
             }
         }
-        .overlay(
-            Group {
+        .onAppear {
 
-                Button("") { zoomIn() }
-                    .keyboardShortcut("=", modifiers: .command)
+            loadLinks()
+            loadShortcuts()
+            startKeyMonitor()
+        }
+    }
 
-                Button("") { zoomOut() }
-                    .keyboardShortcut("-", modifiers: .command)
+    func startKeyMonitor() {
 
-                Button("") { zoomReset() }
-                    .keyboardShortcut("0", modifiers: .command)
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+
+            guard event.modifierFlags.contains(.command) else {
+                return event
             }
-            .opacity(0)
-        )
+
+            switch event.charactersIgnoringModifiers {
+
+            case "=", "+":
+                zoomIn()
+                return nil
+
+            case "-":
+                zoomOut()
+                return nil
+
+            case "0":
+                zoomReset()
+                return nil
+
+            default:
+                return event
+            }
+        }
     }
 
     var background: some View {
