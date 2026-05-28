@@ -662,7 +662,6 @@ struct ContentView: View {
             }
             .buttonStyle(.plain)
         }
-        .background(panelFill)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
             RoundedRectangle(cornerRadius: 5)
@@ -697,7 +696,6 @@ struct ContentView: View {
             }
             .buttonStyle(.plain)
         }
-        .background(panelFill)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
             RoundedRectangle(cornerRadius: 5)
