@@ -377,7 +377,7 @@ struct ContentView: View {
 
             addShortcutButton
         }
-        .padding(.leading, -5)
+        .padding(.leading, -3)
         .frame(
             maxWidth: .infinity,
             alignment: .leading
@@ -1050,7 +1050,7 @@ struct HoverShortcutIcon: View {
         }
         .frame(width: iconSize, height: iconSize)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .opacity(hovering ? 1.0 : 0.55)
+        .opacity(hovering ? 1.0 : 0.72)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
@@ -1207,7 +1207,7 @@ struct HoverLinkRow: View {
                                         )
                                     )
                                     .foregroundStyle(
-                                        .white.opacity(0.82)
+                                        .white.opacity(hovering ? 0.82 : 0.40)
                                     )
                             }
                         }
@@ -1222,7 +1222,7 @@ struct HoverLinkRow: View {
                                 )
                             )
                             .foregroundStyle(
-                                .white.opacity(0.82)
+                                .white.opacity(hovering ? 0.82 : 0.40)
                             )
                     }
                 }
@@ -1236,7 +1236,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(0.82)
+                        .white.opacity(hovering ? 0.82 : 0.40)
                     )
 
                 Spacer()
@@ -1256,7 +1256,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(0.30)
+                        .white.opacity(hovering ? 0.30 : 0.15)
                     )
                 }
             }
