@@ -1,7 +1,7 @@
 // LINKS APP
-// VERSION 3.10
-// Split zoom: icons and links scale independently
-// 2026-05-27
+// VERSION 3.11
+// Link rows 20% shorter, font weights reduced
+// 2026-05-28
 
 import SwiftUI
 import UniformTypeIdentifiers
@@ -597,20 +597,20 @@ struct ContentView: View {
                     Image(systemName: "plus")
                         .font(
                             .system(
-                                size: 14 * linkZoomFactor,
-                                weight: .medium
+                                size: 11 * linkZoomFactor,
+                                weight: .regular
                             )
                         )
                         .foregroundStyle(
                             .white.opacity(0.16)
                         )
                 }
-                .frame(width: 30 * linkZoomFactor, height: 30 * linkZoomFactor)
+                .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
 
                 Spacer()
             }
             .padding(.horizontal, 14)
-            .frame(height: 46 * linkZoomFactor)
+            .frame(height: 37 * linkZoomFactor)
             .background(panelFill)
             .clipShape(
                 RoundedRectangle(cornerRadius: 10)
@@ -1192,14 +1192,14 @@ struct HoverLinkRow: View {
                         Image(nsImage: customIcon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26 * zoomFactor, height: 26 * zoomFactor)
+                            .frame(width: 21 * zoomFactor, height: 21 * zoomFactor)
 
                     } else if isApplicationPath(link.url) {
 
                         Image(nsImage: NSWorkspace.shared.icon(forFile: link.url))
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26 * zoomFactor, height: 26 * zoomFactor)
+                            .frame(width: 21 * zoomFactor, height: 21 * zoomFactor)
 
                     } else if let faviconURL = faviconURL(for: link.url) {
 
@@ -1220,7 +1220,7 @@ struct HoverLinkRow: View {
                                     .font(
                                         .system(
                                             size: 14 * zoomFactor,
-                                            weight: .bold
+                                            weight: .semibold
                                         )
                                     )
                                     .foregroundStyle(
@@ -1235,7 +1235,7 @@ struct HoverLinkRow: View {
                             .font(
                                 .system(
                                     size: 14 * zoomFactor,
-                                    weight: .bold
+                                    weight: .semibold
                                 )
                             )
                             .foregroundStyle(
@@ -1243,13 +1243,13 @@ struct HoverLinkRow: View {
                             )
                     }
                 }
-                .frame(width: 30 * zoomFactor, height: 30 * zoomFactor)
+                .frame(width: 24 * zoomFactor, height: 24 * zoomFactor)
 
                 Text(link.title)
                     .font(
                         .system(
                             size: 13 * zoomFactor,
-                            weight: .medium
+                            weight: .regular
                         )
                     )
                     .foregroundStyle(
@@ -1269,7 +1269,7 @@ struct HoverLinkRow: View {
                     .font(
                         .system(
                             size: 11 * zoomFactor,
-                            weight: .medium
+                            weight: .regular
                         )
                     )
                     .foregroundStyle(
@@ -1278,7 +1278,7 @@ struct HoverLinkRow: View {
                 }
             }
             .padding(.horizontal, 14)
-            .frame(height: 46 * zoomFactor)
+            .frame(height: 37 * zoomFactor)
             .background(.white.opacity(0.05))
             .clipShape(
                 RoundedRectangle(cornerRadius: 10)
