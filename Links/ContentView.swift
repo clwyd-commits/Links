@@ -642,33 +642,32 @@ struct ContentView: View {
             Button { zoomIconOut() } label: {
 
                 Image(systemName: "minus")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
 
             Divider()
-                .frame(height: 12)
+                .frame(height: 10)
 
             Button { zoomIconIn() } label: {
 
                 Image(systemName: "plus")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
         }
         .background(panelFill)
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: 5)
                 .stroke(borderColor, lineWidth: 0.5)
         )
-        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var linkScaleStepper: some View {
@@ -678,33 +677,33 @@ struct ContentView: View {
             Button { zoomLinkOut() } label: {
 
                 Image(systemName: "minus")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
 
             Divider()
-                .frame(height: 12)
+                .frame(height: 10)
 
             Button { zoomLinkIn() } label: {
 
                 Image(systemName: "plus")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
         }
         .background(panelFill)
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: 5)
                 .stroke(borderColor, lineWidth: 0.5)
         )
-        .frame(maxWidth: .infinity, alignment: .center)
+        .padding(.leading, 18)
     }
 
     var bottomBar: some View {
