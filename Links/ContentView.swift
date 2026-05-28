@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 3.11
-// Link rows 20% shorter, font weights reduced
+// VERSION 3.12
+// Clean UI pass: no icon box fill, link box blends with panel, chevron/spacing tweaks
 // 2026-05-28
 
 import SwiftUI
@@ -404,9 +404,6 @@ struct ContentView: View {
                         lineWidth: 0.5
                     )
 
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.black.opacity(0.14))
-
                 Image(systemName: "plus")
                     .font(
                         .system(
@@ -445,7 +442,7 @@ struct ContentView: View {
 
             VStack(
                 alignment: .leading,
-                spacing: 8
+                spacing: 12
             ) {
 
                 ForEach(visibleLinks) { visible in
@@ -1036,8 +1033,6 @@ struct HoverShortcutIcon: View {
                     lineWidth: 0.5
                 )
 
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.black.opacity(0.22))
             if isImagePath(shortcut.icon),
                let customIcon = NSImage(contentsOfFile: shortcut.icon) {
 
@@ -1273,13 +1268,13 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(0.45)
+                        .white.opacity(0.30)
                     )
                 }
             }
             .padding(.horizontal, 14)
             .frame(height: 37 * zoomFactor)
-            .background(.white.opacity(0.05))
+            .background(.white.opacity(0.025))
             .clipShape(
                 RoundedRectangle(cornerRadius: 10)
             )
