@@ -108,39 +108,22 @@ struct ContentView: View {
 
     var body: some View {
 
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 10) {
 
-            topBar
+            shortcutRow
 
-            HStack(spacing: 0) {
+            linkList
 
-                sideBorder
-
-                VStack(alignment: .leading, spacing: 10) {
-
-                    shortcutRow
-
-                    linkList
-
-                    linkScaleStepper
-                }
-                .padding(22)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(panelFill)
-
-                sideBorder
-            }
-
-            bottomBar
+            linkScaleStepper
         }
+        .padding(22)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(panelFill)
         .background(background)
-        .clipShape(
-            RoundedRectangle(cornerRadius: frameCornerRadius)
-        )
+        .clipShape(RoundedRectangle(cornerRadius: frameCornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: frameCornerRadius)
-                .stroke(Color.white.opacity(0.16), lineWidth: 0.5)
-                .padding(innerFrameInset)
+                .stroke(Color.white.opacity(0.12), lineWidth: 0.5)
         )
         .preferredColorScheme(.dark)
         .sheet(item: $linkEditorMode) { mode in
@@ -377,7 +360,7 @@ struct ContentView: View {
 
             addShortcutButton
         }
-        .padding(.leading, -3)
+        .padding(.leading, -2)
         .frame(
             maxWidth: .infinity,
             alignment: .leading
