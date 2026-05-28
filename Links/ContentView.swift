@@ -206,6 +206,21 @@ struct ContentView: View {
 
             loadLinks()
             loadShortcuts()
+
+            // Configure the window after SwiftUI has finished building it
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                guard let window = NSApplication.shared.windows.first else { return }
+                // Allow dragging from anywhere in the window body
+                window.isMovableByWindowBackground = true
+                // Normal managed window — no forced snapping to screen edges
+                window.collectionBehavior = [.managed, .participatesInCycle]
+                // Disable frame autosave so previous positions don't override
+                window.setFrameAutosaveName("")
+                // Cap resize at the usable screen area
+                if let screen = NSScreen.main {
+                    window.maxSize = screen.visibleFrame.size
+                }
+            }
         }
     }
 
