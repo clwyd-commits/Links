@@ -519,6 +519,7 @@ struct ContentView: View {
                 addLinkRow
             }
             .padding(.bottom, 18)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -1049,7 +1050,7 @@ struct HoverShortcutIcon: View {
             }
         }
         .frame(width: iconSize, height: iconSize)
-        .brightness(hovering ? 0.18 : 0)
+        .opacity(hovering ? 1.0 : 0.55)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
