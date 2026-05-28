@@ -335,7 +335,6 @@ struct ContentView: View {
 
             addShortcutButton
         }
-        .padding(.leading, -2)
         .frame(
             maxWidth: .infinity,
             alignment: .leading
