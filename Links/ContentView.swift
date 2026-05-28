@@ -377,6 +377,7 @@ struct ContentView: View {
 
             addShortcutButton
         }
+        .padding(.leading, -5)
         .frame(
             maxWidth: .infinity,
             alignment: .leading
@@ -1026,14 +1027,14 @@ struct HoverShortcutIcon: View {
                 Image(nsImage: customIcon)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: iconSize * 1.35, height: iconSize * 1.35)
+                    .frame(width: iconSize * 1.22, height: iconSize * 1.22)
 
             } else if isApplicationPath(shortcut.url) {
 
                 Image(nsImage: NSWorkspace.shared.icon(forFile: shortcut.url))
                     .resizable()
                     .scaledToFill()
-                    .frame(width: iconSize * 1.35, height: iconSize * 1.35)
+                    .frame(width: iconSize * 1.22, height: iconSize * 1.22)
 
             } else {
 
