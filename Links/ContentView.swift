@@ -1,7 +1,7 @@
 // LINKS APP
-// VERSION 3.10
-// Split zoom: icons and links scale independently
-// 2026-05-27
+// VERSION 3.14
+// Light font, full-row hover hit area, icon brightness on hover
+// 2026-05-28
 
 import SwiftUI
 import UniformTypeIdentifiers
@@ -75,6 +75,11 @@ struct ContentView: View {
 
     @State private var hoveringAddShortcut = false
     @State private var hoveringAddLink = false
+
+    @State private var hoveringIconMinus = false
+    @State private var hoveringIconPlus = false
+    @State private var hoveringLinkMinus = false
+    @State private var hoveringLinkPlus = false
 
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
@@ -378,7 +383,6 @@ struct ContentView: View {
         )
 
         }
-        .padding(.leading, 18)
         .padding(.bottom, 2)
         .frame(
             maxWidth: .infinity,
@@ -395,17 +399,6 @@ struct ContentView: View {
         } label: {
 
             ZStack {
-
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(
-                        hoveringAddShortcut
-                        ? hoverBorderColor
-                        : borderColor,
-                        lineWidth: 0.5
-                    )
-
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.black.opacity(0.14))
 
                 Image(systemName: "plus")
                     .font(
@@ -445,7 +438,7 @@ struct ContentView: View {
 
             VStack(
                 alignment: .leading,
-                spacing: 8
+                spacing: 12
             ) {
 
                 ForEach(visibleLinks) { visible in
@@ -525,7 +518,6 @@ struct ContentView: View {
 
                 addLinkRow
             }
-            .padding(.horizontal, 18)
             .padding(.bottom, 18)
         }
     }
@@ -597,33 +589,29 @@ struct ContentView: View {
                     Image(systemName: "plus")
                         .font(
                             .system(
-                                size: 14 * linkZoomFactor,
-                                weight: .medium
+                                size: 11 * linkZoomFactor,
+                                weight: .regular
                             )
                         )
                         .foregroundStyle(
                             .white.opacity(0.16)
                         )
                 }
-                .frame(width: 30 * linkZoomFactor, height: 30 * linkZoomFactor)
+                .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
 
                 Spacer()
             }
             .padding(.horizontal, 14)
-            .frame(height: 46 * linkZoomFactor)
-            .background(panelFill)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 10)
-            )
+            .frame(height: 37 * linkZoomFactor)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(
-                        hoveringAddLink
-                        ? hoverBorderColor
-                        : borderColor,
+                        hoveringAddLink ? hoverBorderColor : borderColor,
                         lineWidth: 0.5
                     )
             )
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -642,33 +630,33 @@ struct ContentView: View {
             Button { zoomIconOut() } label: {
 
                 Image(systemName: "minus")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.white.opacity(hoveringIconMinus ? 0.75 : 0.30))
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringIconMinus = h } }
 
             Divider()
-                .frame(height: 12)
+                .frame(height: 10)
 
             Button { zoomIconIn() } label: {
 
                 Image(systemName: "plus")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.white.opacity(hoveringIconPlus ? 0.75 : 0.30))
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringIconPlus = h } }
         }
-        .background(panelFill)
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: 5)
                 .stroke(borderColor, lineWidth: 0.5)
         )
-        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var linkScaleStepper: some View {
@@ -678,33 +666,33 @@ struct ContentView: View {
             Button { zoomLinkOut() } label: {
 
                 Image(systemName: "minus")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.white.opacity(hoveringLinkMinus ? 0.75 : 0.30))
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringLinkMinus = h } }
 
             Divider()
-                .frame(height: 12)
+                .frame(height: 10)
 
             Button { zoomLinkIn() } label: {
 
                 Image(systemName: "plus")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
-                    .frame(width: 36, height: 24)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.white.opacity(hoveringLinkPlus ? 0.75 : 0.30))
+                    .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringLinkPlus = h } }
         }
-        .background(panelFill)
-        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
-            RoundedRectangle(cornerRadius: 6)
+            RoundedRectangle(cornerRadius: 5)
                 .stroke(borderColor, lineWidth: 0.5)
         )
-        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var bottomBar: some View {
@@ -1031,16 +1019,6 @@ struct HoverShortcutIcon: View {
 
         ZStack {
 
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(
-                    hovering
-                    ? hoverBorderColor
-                    : borderColor,
-                    lineWidth: 0.5
-                )
-
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.black.opacity(0.22))
             if isImagePath(shortcut.icon),
                let customIcon = NSImage(contentsOfFile: shortcut.icon) {
 
@@ -1071,6 +1049,7 @@ struct HoverShortcutIcon: View {
             }
         }
         .frame(width: iconSize, height: iconSize)
+        .brightness(hovering ? 0.18 : 0)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
@@ -1195,14 +1174,14 @@ struct HoverLinkRow: View {
                         Image(nsImage: customIcon)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26 * zoomFactor, height: 26 * zoomFactor)
+                            .frame(width: 21 * zoomFactor, height: 21 * zoomFactor)
 
                     } else if isApplicationPath(link.url) {
 
                         Image(nsImage: NSWorkspace.shared.icon(forFile: link.url))
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 26 * zoomFactor, height: 26 * zoomFactor)
+                            .frame(width: 21 * zoomFactor, height: 21 * zoomFactor)
 
                     } else if let faviconURL = faviconURL(for: link.url) {
 
@@ -1223,7 +1202,7 @@ struct HoverLinkRow: View {
                                     .font(
                                         .system(
                                             size: 14 * zoomFactor,
-                                            weight: .bold
+                                            weight: .semibold
                                         )
                                     )
                                     .foregroundStyle(
@@ -1238,7 +1217,7 @@ struct HoverLinkRow: View {
                             .font(
                                 .system(
                                     size: 14 * zoomFactor,
-                                    weight: .bold
+                                    weight: .semibold
                                 )
                             )
                             .foregroundStyle(
@@ -1246,13 +1225,13 @@ struct HoverLinkRow: View {
                             )
                     }
                 }
-                .frame(width: 30 * zoomFactor, height: 30 * zoomFactor)
+                .frame(width: 24 * zoomFactor, height: 24 * zoomFactor)
 
                 Text(link.title)
                     .font(
                         .system(
                             size: 13 * zoomFactor,
-                            weight: .medium
+                            weight: .light
                         )
                     )
                     .foregroundStyle(
@@ -1272,29 +1251,25 @@ struct HoverLinkRow: View {
                     .font(
                         .system(
                             size: 11 * zoomFactor,
-                            weight: .medium
+                            weight: .regular
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(0.45)
+                        .white.opacity(0.30)
                     )
                 }
             }
             .padding(.horizontal, 14)
-            .frame(height: 46 * zoomFactor)
-            .background(.white.opacity(0.05))
-            .clipShape(
-                RoundedRectangle(cornerRadius: 10)
-            )
+            .frame(height: 37 * zoomFactor)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(
-                        hovering
-                        ? hoverBorderColor
-                        : borderColor,
+                        hovering ? hoverBorderColor : borderColor,
                         lineWidth: 0.5
                     )
             )
+            .contentShape(Rectangle())
             .padding(
                 .leading,
                 CGFloat(level) * 24 * zoomFactor
