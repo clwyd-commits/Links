@@ -83,8 +83,6 @@ struct ContentView: View {
 
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
-    @State private var keyMonitor: Any?
-
     @AppStorage("iconZoomStep") private var iconZoomStep: Int = defaultZoomStep
     @AppStorage("linkZoomStep") private var linkZoomStep: Int = defaultZoomStep
 
@@ -208,44 +206,6 @@ struct ContentView: View {
 
             loadLinks()
             loadShortcuts()
-            startKeyMonitor()
-        }
-        .onDisappear {
-
-            if let monitor = keyMonitor {
-                NSEvent.removeMonitor(monitor)
-                keyMonitor = nil
-            }
-        }
-    }
-
-    func startKeyMonitor() {
-
-        guard keyMonitor == nil else { return }
-
-        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-
-            guard event.modifierFlags.contains(.command) else {
-                return event
-            }
-
-            switch event.charactersIgnoringModifiers {
-
-            case "=", "+":
-                zoomIn()
-                return nil
-
-            case "-":
-                zoomOut()
-                return nil
-
-            case "0":
-                zoomReset()
-                return nil
-
-            default:
-                return event
-            }
         }
     }
 
@@ -687,29 +647,7 @@ struct ContentView: View {
             .frame(height: 24)
     }
 
-    // Global hotkeys — step both scales together
-    func zoomIn() {
-        withAnimation(.easeOut(duration: 0.15)) {
-            if iconZoomStep < zoomSteps.count - 1 { iconZoomStep += 1 }
-            if linkZoomStep < zoomSteps.count - 1 { linkZoomStep += 1 }
-        }
-    }
-
-    func zoomOut() {
-        withAnimation(.easeOut(duration: 0.15)) {
-            if iconZoomStep > 0 { iconZoomStep -= 1 }
-            if linkZoomStep > 0 { linkZoomStep -= 1 }
-        }
-    }
-
-    func zoomReset() {
-        withAnimation(.easeOut(duration: 0.15)) {
-            iconZoomStep = defaultZoomStep
-            linkZoomStep = defaultZoomStep
-        }
-    }
-
-    // Per-section controls
+    // Per-section scale controls
     func zoomIconIn() {
         guard iconZoomStep < zoomSteps.count - 1 else { return }
         withAnimation(.easeOut(duration: 0.15)) { iconZoomStep += 1 }
