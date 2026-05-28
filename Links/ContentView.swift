@@ -383,7 +383,6 @@ struct ContentView: View {
         )
 
         }
-        .padding(.leading, 18)
         .padding(.bottom, 2)
         .frame(
             maxWidth: .infinity,
@@ -519,7 +518,6 @@ struct ContentView: View {
 
                 addLinkRow
             }
-            .padding(.horizontal, 18)
             .padding(.bottom, 18)
         }
     }
@@ -695,7 +693,6 @@ struct ContentView: View {
             RoundedRectangle(cornerRadius: 5)
                 .stroke(borderColor, lineWidth: 0.5)
         )
-        .padding(.leading, 18)
     }
 
     var bottomBar: some View {
