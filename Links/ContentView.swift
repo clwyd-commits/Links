@@ -1026,16 +1026,14 @@ struct HoverShortcutIcon: View {
                 Image(nsImage: customIcon)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: iconSize, height: iconSize)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .frame(width: iconSize * 1.22, height: iconSize * 1.22)
 
             } else if isApplicationPath(shortcut.url) {
 
                 Image(nsImage: NSWorkspace.shared.icon(forFile: shortcut.url))
                     .resizable()
                     .scaledToFill()
-                    .frame(width: iconSize, height: iconSize)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .frame(width: iconSize * 1.22, height: iconSize * 1.22)
 
             } else {
 
@@ -1050,6 +1048,7 @@ struct HoverShortcutIcon: View {
             }
         }
         .frame(width: iconSize, height: iconSize)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         .opacity(hovering ? 1.0 : 0.55)
         .onHover { hover in
 
