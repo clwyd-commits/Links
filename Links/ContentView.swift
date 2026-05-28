@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 3.13
-// No borders on icons/links, transparent link rows, stepper hover highlight
+// VERSION 3.14
+// Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
 import SwiftUI
@@ -613,6 +613,7 @@ struct ContentView: View {
                         lineWidth: 0.5
                     )
             )
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -1051,6 +1052,7 @@ struct HoverShortcutIcon: View {
             }
         }
         .frame(width: iconSize, height: iconSize)
+        .brightness(hovering ? 0.18 : 0)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
@@ -1232,7 +1234,7 @@ struct HoverLinkRow: View {
                     .font(
                         .system(
                             size: 13 * zoomFactor,
-                            weight: .regular
+                            weight: .light
                         )
                     )
                     .foregroundStyle(
@@ -1270,6 +1272,7 @@ struct HoverLinkRow: View {
                         lineWidth: 0.5
                     )
             )
+            .contentShape(Rectangle())
             .padding(
                 .leading,
                 CGFloat(level) * 24 * zoomFactor
