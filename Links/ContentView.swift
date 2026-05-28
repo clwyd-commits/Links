@@ -102,7 +102,7 @@ struct ContentView: View {
     let hoverBorderColor = Color.white.opacity(0.55)
     let panelFill = Color.white.opacity(0.025)
     var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
-    var shortcutIconSpacing: CGFloat { 6 * iconZoomFactor }
+    var shortcutIconSpacing: CGFloat { 10 * iconZoomFactor }
     let frameCornerRadius: CGFloat = 10
     let innerFrameInset: CGFloat = 24
 
@@ -1026,14 +1026,14 @@ struct HoverShortcutIcon: View {
                 Image(nsImage: customIcon)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: iconSize * 1.22, height: iconSize * 1.22)
+                    .frame(width: iconSize * 1.35, height: iconSize * 1.35)
 
             } else if isApplicationPath(shortcut.url) {
 
                 Image(nsImage: NSWorkspace.shared.icon(forFile: shortcut.url))
                     .resizable()
                     .scaledToFill()
-                    .frame(width: iconSize * 1.22, height: iconSize * 1.22)
+                    .frame(width: iconSize * 1.35, height: iconSize * 1.35)
 
             } else {
 
