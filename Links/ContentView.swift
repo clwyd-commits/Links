@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.14
+// VERSION 3.20
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
