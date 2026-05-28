@@ -410,7 +410,7 @@ struct ContentView: View {
                 Image(systemName: "plus")
                     .font(
                         .system(
-                            size: 18,
+                            size: 13,
                             weight: .medium
                         )
                     )
@@ -418,7 +418,7 @@ struct ContentView: View {
                         .white.opacity(0.16)
                     )
             }
-            .frame(width: shortcutIconSize, height: shortcutIconSize)
+            .frame(width: shortcutIconSize * 0.7, height: shortcutIconSize * 0.7)
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -597,7 +597,7 @@ struct ContentView: View {
                     Image(systemName: "plus")
                         .font(
                             .system(
-                                size: 14,
+                                size: 14 * linkZoomFactor,
                                 weight: .medium
                             )
                         )
@@ -605,12 +605,12 @@ struct ContentView: View {
                             .white.opacity(0.16)
                         )
                 }
-                .frame(width: 30, height: 30)
+                .frame(width: 30 * linkZoomFactor, height: 30 * linkZoomFactor)
 
                 Spacer()
             }
             .padding(.horizontal, 14)
-            .frame(height: 46)
+            .frame(height: 46 * linkZoomFactor)
             .background(panelFill)
             .clipShape(
                 RoundedRectangle(cornerRadius: 10)
@@ -662,7 +662,7 @@ struct ContentView: View {
             }
             .buttonStyle(.plain)
         }
-        .background(.black.opacity(0.14))
+        .background(panelFill)
         .clipShape(RoundedRectangle(cornerRadius: 6))
         .overlay(
             RoundedRectangle(cornerRadius: 6)
@@ -698,7 +698,7 @@ struct ContentView: View {
             }
             .buttonStyle(.plain)
         }
-        .background(.black.opacity(0.14))
+        .background(panelFill)
         .clipShape(RoundedRectangle(cornerRadius: 6))
         .overlay(
             RoundedRectangle(cornerRadius: 6)
