@@ -1,6 +1,6 @@
 // LINKS APP
-// VERSION 3.12
-// Clean UI pass: no icon box fill, link box blends with panel, chevron/spacing tweaks
+// VERSION 3.13
+// No borders on icons/links, transparent link rows, stepper hover highlight
 // 2026-05-28
 
 import SwiftUI
@@ -75,6 +75,11 @@ struct ContentView: View {
 
     @State private var hoveringAddShortcut = false
     @State private var hoveringAddLink = false
+
+    @State private var hoveringIconMinus = false
+    @State private var hoveringIconPlus = false
+    @State private var hoveringLinkMinus = false
+    @State private var hoveringLinkPlus = false
 
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
@@ -396,14 +401,6 @@ struct ContentView: View {
 
             ZStack {
 
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(
-                        hoveringAddShortcut
-                        ? hoverBorderColor
-                        : borderColor,
-                        lineWidth: 0.5
-                    )
-
                 Image(systemName: "plus")
                     .font(
                         .system(
@@ -608,19 +605,6 @@ struct ContentView: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 37 * linkZoomFactor)
-            .background(panelFill)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 10)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(
-                        hoveringAddLink
-                        ? hoverBorderColor
-                        : borderColor,
-                        lineWidth: 0.5
-                    )
-            )
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -640,11 +624,12 @@ struct ContentView: View {
 
                 Image(systemName: "minus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
+                    .foregroundStyle(.white.opacity(hoveringIconMinus ? 0.75 : 0.30))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringIconMinus = h } }
 
             Divider()
                 .frame(height: 10)
@@ -653,11 +638,12 @@ struct ContentView: View {
 
                 Image(systemName: "plus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
+                    .foregroundStyle(.white.opacity(hoveringIconPlus ? 0.75 : 0.30))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringIconPlus = h } }
         }
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
@@ -674,11 +660,12 @@ struct ContentView: View {
 
                 Image(systemName: "minus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
+                    .foregroundStyle(.white.opacity(hoveringLinkMinus ? 0.75 : 0.30))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringLinkMinus = h } }
 
             Divider()
                 .frame(height: 10)
@@ -687,11 +674,12 @@ struct ContentView: View {
 
                 Image(systemName: "plus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.30))
+                    .foregroundStyle(.white.opacity(hoveringLinkPlus ? 0.75 : 0.30))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringLinkPlus = h } }
         }
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
@@ -1025,14 +1013,6 @@ struct HoverShortcutIcon: View {
 
         ZStack {
 
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(
-                    hovering
-                    ? hoverBorderColor
-                    : borderColor,
-                    lineWidth: 0.5
-                )
-
             if isImagePath(shortcut.icon),
                let customIcon = NSImage(contentsOfFile: shortcut.icon) {
 
@@ -1274,19 +1254,6 @@ struct HoverLinkRow: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 37 * zoomFactor)
-            .background(.white.opacity(0.025))
-            .clipShape(
-                RoundedRectangle(cornerRadius: 10)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(
-                        hovering
-                        ? hoverBorderColor
-                        : borderColor,
-                        lineWidth: 0.5
-                    )
-            )
             .padding(
                 .leading,
                 CGFloat(level) * 24 * zoomFactor
