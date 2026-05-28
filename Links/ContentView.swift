@@ -605,6 +605,14 @@ struct ContentView: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 37 * linkZoomFactor)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(
+                        hoveringAddLink ? hoverBorderColor : borderColor,
+                        lineWidth: 0.5
+                    )
+            )
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -1254,6 +1262,14 @@ struct HoverLinkRow: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 37 * zoomFactor)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(
+                        hovering ? hoverBorderColor : borderColor,
+                        lineWidth: 0.5
+                    )
+            )
             .padding(
                 .leading,
                 CGFloat(level) * 24 * zoomFactor
