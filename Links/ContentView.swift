@@ -118,10 +118,10 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(background)
         .preferredColorScheme(.dark)
-        .toolbar {
-            ToolbarItem(placement: .navigation) {
-                iconScaleStepper
-            }
+        .overlay(alignment: .topLeading) {
+            iconScaleStepper
+                .padding(.leading, 88)
+                .padding(.top, 10)
         }
         .sheet(item: $linkEditorMode) { mode in
 
