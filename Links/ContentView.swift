@@ -606,7 +606,7 @@ struct ContentView: View {
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
             RoundedRectangle(cornerRadius: 5)
-                .stroke(borderColor, lineWidth: 0.5)
+                .stroke((hoveringIconMinus || hoveringIconPlus) ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
     }
 
@@ -642,7 +642,7 @@ struct ContentView: View {
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
             RoundedRectangle(cornerRadius: 5)
-                .stroke(borderColor, lineWidth: 0.5)
+                .stroke((hoveringLinkMinus || hoveringLinkPlus) ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
     }
 
