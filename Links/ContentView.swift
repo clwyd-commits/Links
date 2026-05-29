@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.36
+// VERSION 3.37
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1008,7 +1008,7 @@ struct HoverLinkRow: View {
 
                 ZStack {
 
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    RoundedRectangle(cornerRadius: 11, style: .continuous)
                         .fill(.black.opacity(0.22))
 
                     if isImagePath(link.icon),
@@ -1070,7 +1070,7 @@ struct HoverLinkRow: View {
                 }
                 .frame(width: 24 * zoomFactor, height: 24 * zoomFactor)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    RoundedRectangle(cornerRadius: 11, style: .continuous)
                         .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
                 )
 
@@ -1109,9 +1109,9 @@ struct HoverLinkRow: View {
             .padding(.horizontal, 14)
             .frame(height: 37 * zoomFactor)
             .background(Color.white.opacity(0.03))
-            .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 13, style: .continuous)
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
                     .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
             .contentShape(Rectangle())
@@ -1623,7 +1623,7 @@ struct AddLinkRow: View {
                 }
                 .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    RoundedRectangle(cornerRadius: 11, style: .continuous)
                         .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
                 )
 
@@ -1632,9 +1632,9 @@ struct AddLinkRow: View {
             .padding(.horizontal, 14)
             .frame(height: 37 * linkZoomFactor)
             .background(Color.white.opacity(0.03))
-            .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 13, style: .continuous)
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
                     .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
             .contentShape(Rectangle())
