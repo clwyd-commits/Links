@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.50
+// VERSION 3.51
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -114,13 +114,13 @@ struct ContentView: View {
         }
         .padding(.horizontal, 22)
         .padding(.top, 8)
-        .padding(.bottom, 52)
+        .padding(.bottom, 36)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .mask(alignment: .top) {
             VStack(spacing: 0) {
                 Color.clear.frame(height: 8)
                 Color.white.frame(maxWidth: .infinity, maxHeight: .infinity)
-                Color.clear.frame(height: 52)
+                Color.clear.frame(height: 36)
             }
         }
         .background(background)
