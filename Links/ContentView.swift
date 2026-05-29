@@ -74,7 +74,6 @@ struct ContentView: View {
     @State private var draggedLinkID: UUID?
 
     @State private var hoveringAddShortcut = false
-    @State private var hoveringAddLink = false
 
     @State private var hoveringIconMinus = false
     @State private var hoveringIconPlus = false
@@ -467,7 +466,12 @@ struct ContentView: View {
                     }
                 }
 
-                addLinkRow
+                AddLinkRow(
+                    linkEditorMode: $linkEditorMode,
+                    borderColor: borderColor,
+                    hoverBorderColor: hoverBorderColor,
+                    linkZoomFactor: linkZoomFactor
+                )
             }
             .padding(.bottom, 18)
             .padding(.trailing, 22)
@@ -517,62 +521,6 @@ struct ContentView: View {
         return result
     }
 
-    var addLinkRow: some View {
-
-        Button {
-
-            linkEditorMode = .addRoot
-
-        } label: {
-
-            HStack(spacing: 14) {
-
-                ZStack {
-
-                    RoundedRectangle(cornerRadius: 7)
-                        .stroke(
-                            hoveringAddLink
-                            ? hoverBorderColor
-                            : borderColor,
-                            lineWidth: 1.0
-                        )
-
-                    Image(systemName: "plus")
-                        .font(
-                            .system(
-                                size: 11 * linkZoomFactor,
-                                weight: .regular
-                            )
-                        )
-                        .foregroundStyle(
-                            .white.opacity(hoveringAddLink ? 0.70 : 0.28)
-                        )
-                }
-                .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
-
-                Spacer()
-            }
-            .padding(.horizontal, 14)
-            .frame(height: 37 * linkZoomFactor)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(
-                        hoveringAddLink ? hoverBorderColor : borderColor,
-                        lineWidth: 1.0
-                    )
-            )
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .onHover { hovering in
-
-            withAnimation(.easeOut(duration: 0.12)) {
-
-                hoveringAddLink = hovering
-            }
-        }
-    }
 
     var iconScaleStepper: some View {
 
@@ -1682,6 +1630,57 @@ struct ScrollbarCustomizer: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: NSView, context: Context) {}
+}
+
+struct AddLinkRow: View {
+
+    @Binding var linkEditorMode: LinkEditorMode?
+    let borderColor: Color
+    let hoverBorderColor: Color
+    let linkZoomFactor: CGFloat
+
+    @State private var hovering = false
+
+    var body: some View {
+
+        Button {
+
+            linkEditorMode = .addRoot
+
+        } label: {
+
+            HStack(spacing: 14) {
+
+                ZStack {
+
+                    RoundedRectangle(cornerRadius: 7)
+                        .stroke(
+                            hovering ? hoverBorderColor : borderColor,
+                            lineWidth: 1.0
+                        )
+
+                    Image(systemName: "plus")
+                        .font(.system(size: 11 * linkZoomFactor, weight: .regular))
+                        .foregroundStyle(.white.opacity(hovering ? 0.70 : 0.28))
+                }
+                .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
+
+                Spacer()
+            }
+            .padding(.horizontal, 14)
+            .frame(height: 37 * linkZoomFactor)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 1.0)
+            )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onHover { h in
+            withAnimation(.easeOut(duration: 0.12)) { hovering = h }
+        }
+    }
 }
 
 #Preview {
