@@ -220,6 +220,14 @@ struct ContentView: View {
                 if let screen = NSScreen.main {
                     window.maxSize = screen.visibleFrame.size
                 }
+                // Match title bar to content background
+                window.titlebarAppearsTransparent = true
+                window.backgroundColor = NSColor(
+                    red: 0.05,
+                    green: 0.05,
+                    blue: 0.055,
+                    alpha: 1.0
+                )
             }
         }
     }
