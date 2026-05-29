@@ -97,7 +97,7 @@ struct ContentView: View {
     }
 
     let borderColor = Color.gray.opacity(0.28)
-    let hoverBorderColor = Color.white.opacity(0.80)
+    let hoverBorderColor = Color.white.opacity(1.0)
     let panelFill = Color.white.opacity(0.025)
     var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
     var shortcutIconSpacing: CGFloat { 10 * iconZoomFactor }
