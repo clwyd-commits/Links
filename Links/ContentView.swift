@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.23
+// VERSION 3.24
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1008,14 +1008,6 @@ struct HoverLinkRow: View {
                 ZStack {
 
                     RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .stroke(
-                            hovering
-                            ? hoverBorderColor
-                            : borderColor,
-                            lineWidth: 0.5
-                        )
-
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
                         .fill(.black.opacity(0.22))
 
                     if isImagePath(link.icon),
@@ -1076,6 +1068,10 @@ struct HoverLinkRow: View {
                     }
                 }
                 .frame(width: 24 * zoomFactor, height: 24 * zoomFactor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
+                )
 
                 Text(link.title)
                     .font(
@@ -1114,10 +1110,7 @@ struct HoverLinkRow: View {
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(
-                        hovering ? hoverBorderColor : borderColor,
-                        lineWidth: 0.5
-                    )
+                    .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
             .contentShape(Rectangle())
             .padding(
@@ -1622,17 +1615,15 @@ struct AddLinkRow: View {
 
                 ZStack {
 
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .stroke(
-                            hovering ? hoverBorderColor : borderColor,
-                            lineWidth: 0.5
-                        )
-
                     Image(systemName: "plus")
                         .font(.system(size: 11 * linkZoomFactor, weight: .regular))
                         .foregroundStyle(.white.opacity(hovering ? 1.0 : 0.50))
                 }
                 .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
+                )
 
                 Spacer()
             }
@@ -1641,7 +1632,7 @@ struct AddLinkRow: View {
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
+                    .strokeBorder(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
             .contentShape(Rectangle())
         }
