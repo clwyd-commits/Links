@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.54
+// VERSION 3.55
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -452,9 +452,9 @@ struct ContentView: View {
             .padding(.bottom, 18)
             .padding(.trailing, 22)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .background(ScrollbarCustomizer())
         }
         .clipped()
-        .background(ScrollbarCustomizer())
     }
 
 
