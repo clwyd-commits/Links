@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.37
+// VERSION 3.38
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -523,9 +523,9 @@ struct ContentView: View {
             .buttonStyle(.plain)
             .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringIconPlus = h } }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke((hoveringIconMinus || hoveringIconPlus) ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
     }
@@ -559,9 +559,9 @@ struct ContentView: View {
             .buttonStyle(.plain)
             .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringLinkPlus = h } }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke((hoveringLinkMinus || hoveringLinkPlus) ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
     }
