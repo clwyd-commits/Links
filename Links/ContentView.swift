@@ -357,6 +357,11 @@ struct ContentView: View {
                     )
             }
             .frame(width: shortcutIconSize * 0.7, height: shortcutIconSize * 0.7)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(borderColor, lineWidth: 0.5)
+            )
         }
         .buttonStyle(.plain)
         .onHover { hovering in
