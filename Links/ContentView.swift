@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.48
+// VERSION 3.49
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -331,14 +331,13 @@ struct ContentView: View {
                         .white.opacity(hoveringAddShortcut ? 1.0 : 0.50)
                     )
             }
-            .frame(width: shortcutIconSize * 0.7, height: shortcutIconSize * 0.7)
-            .clipShape(RoundedRectangle(cornerRadius: shortcutIconSize * 0.19, style: .continuous))
+            .frame(width: shortcutIconSize, height: shortcutIconSize)
+            .clipShape(RoundedRectangle(cornerRadius: shortcutIconSize * 0.27, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: shortcutIconSize * 0.19, style: .continuous)
+                RoundedRectangle(cornerRadius: shortcutIconSize * 0.27, style: .continuous)
                     .inset(by: 1.0)
                     .stroke(hoveringAddShortcut ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
-            .frame(width: shortcutIconSize, height: shortcutIconSize)
         }
         .buttonStyle(.plain)
         .onHover { hovering in
