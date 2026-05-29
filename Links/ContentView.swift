@@ -595,11 +595,6 @@ struct ContentView: View {
             .buttonStyle(.plain)
             .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringIconPlus = h } }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 5))
-        .overlay(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(borderColor, lineWidth: 0.5)
-        )
     }
 
     var linkScaleStepper: some View {
