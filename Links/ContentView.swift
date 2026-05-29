@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.24
+// VERSION 3.25
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -95,7 +95,7 @@ struct ContentView: View {
         zoomSteps[max(0, min(linkZoomStep, zoomSteps.count - 1))]
     }
 
-    let borderColor = Color.white.opacity(0.50)
+    let borderColor = Color.white.opacity(0.25)
     let hoverBorderColor = Color.white.opacity(1.0)
     let panelFill = Color.white.opacity(0.025)
     var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
