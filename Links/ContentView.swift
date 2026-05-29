@@ -120,8 +120,8 @@ struct ContentView: View {
         .preferredColorScheme(.dark)
         .overlay(alignment: .topLeading) {
             iconScaleStepper
-                .padding(.leading, 88)
-                .offset(y: -28)
+                .padding(.leading, 82)
+                .offset(y: -25)
         }
         .sheet(item: $linkEditorMode) { mode in
 
