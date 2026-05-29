@@ -220,6 +220,8 @@ struct ContentView: View {
                 if let screen = NSScreen.main {
                     window.maxSize = screen.visibleFrame.size
                 }
+                // Make title bar transparent so app background shows through it
+                window.titlebarAppearsTransparent = true
             }
         }
     }
