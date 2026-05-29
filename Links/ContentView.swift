@@ -121,7 +121,7 @@ struct ContentView: View {
         .overlay(alignment: .topLeading) {
             iconScaleStepper
                 .padding(.leading, 88)
-                .offset(y: -36)
+                .offset(y: -28)
         }
         .sheet(item: $linkEditorMode) { mode in
 
