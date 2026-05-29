@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.42
+// VERSION 3.43
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -115,8 +115,13 @@ struct ContentView: View {
         .padding(.horizontal, 22)
         .padding(.top, 38)
         .padding(.bottom, 52)
-        .clipped()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .mask(
+            Rectangle()
+                .padding(.horizontal, 22)
+                .padding(.top, 38)
+                .padding(.bottom, 52)
+        )
         .background(background)
         .preferredColorScheme(.dark)
         .overlay(alignment: .topTrailing) {
