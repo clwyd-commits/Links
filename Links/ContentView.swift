@@ -116,13 +116,7 @@ struct ContentView: View {
         }
         .padding(22)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(panelFill)
         .background(background)
-        .clipShape(RoundedRectangle(cornerRadius: frameCornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: frameCornerRadius)
-                .stroke(Color.white.opacity(0.12), lineWidth: 0.5)
-        )
         .preferredColorScheme(.dark)
         .sheet(item: $linkEditorMode) { mode in
 
@@ -220,8 +214,9 @@ struct ContentView: View {
                 if let screen = NSScreen.main {
                     window.maxSize = screen.visibleFrame.size
                 }
-                // Make title bar transparent so app background shows through it
+                // Transparent title bar + clear window background lets SwiftUI fill everything
                 window.titlebarAppearsTransparent = true
+                window.backgroundColor = .clear
             }
         }
     }
