@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.31
+// VERSION 3.32
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1107,7 +1107,7 @@ struct HoverLinkRow: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 37 * zoomFactor)
-            .background(Color.white.opacity(0.05))
+            .background(Color.white.opacity(0.03))
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
@@ -1630,7 +1630,7 @@ struct AddLinkRow: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 37 * linkZoomFactor)
-            .background(Color.white.opacity(0.05))
+            .background(Color.white.opacity(0.03))
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
