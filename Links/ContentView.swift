@@ -625,19 +625,17 @@ struct ContentView: View {
 
     func openURL(_ target: String) {
 
-        if target.hasPrefix("/") ||
-            target.hasSuffix(".app") {
+        let trimmed = target.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
 
-            let fileURL = URL(
-                fileURLWithPath: target
-            )
+        if trimmed.hasPrefix("/") || trimmed.hasSuffix(".app") {
 
+            let fileURL = URL(fileURLWithPath: trimmed)
             NSWorkspace.shared.open(fileURL)
-
             return
         }
 
-        if let url = URL(string: target) {
+        if let url = URL(string: trimmed), url.scheme != nil {
 
             NSWorkspace.shared.open(url)
         }
