@@ -118,6 +118,11 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(background)
         .preferredColorScheme(.dark)
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                iconScaleStepper
+            }
+        }
         .sheet(item: $linkEditorMode) { mode in
 
             switch mode {
@@ -247,8 +252,6 @@ struct ContentView: View {
     var shortcutRow: some View {
 
         VStack(alignment: .leading, spacing: 18) {
-
-            iconScaleStepper
 
             LazyVGrid(
             columns: [
