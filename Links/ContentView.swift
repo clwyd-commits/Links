@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.21
+// VERSION 3.22
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1700,19 +1700,6 @@ struct ShortcutCell: View {
                 Button("Delete Software Icon", role: .destructive) { onDelete() }
             }
 
-            if hovering {
-                Button {
-                    onDelete()
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 7, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.90))
-                        .frame(width: 14, height: 14)
-                        .background(Circle().fill(Color.black.opacity(0.60)))
-                }
-                .buttonStyle(.plain)
-                .offset(x: 3, y: -3)
-            }
         }
         .onHover { h in
             withAnimation(.easeOut(duration: 0.12)) { hovering = h }
