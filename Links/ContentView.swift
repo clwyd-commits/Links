@@ -1038,7 +1038,7 @@ struct HoverLinkRow: View {
 
                 ZStack {
 
-                    RoundedRectangle(cornerRadius: 7)
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
                         .stroke(
                             hovering
                             ? hoverBorderColor
@@ -1046,7 +1046,7 @@ struct HoverLinkRow: View {
                             lineWidth: 1.0
                         )
 
-                    RoundedRectangle(cornerRadius: 7)
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
                         .fill(.black.opacity(0.22))
 
                     if isImagePath(link.icon),
@@ -1653,7 +1653,7 @@ struct AddLinkRow: View {
 
                 ZStack {
 
-                    RoundedRectangle(cornerRadius: 7)
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
                         .stroke(
                             hovering ? hoverBorderColor : borderColor,
                             lineWidth: 1.0
