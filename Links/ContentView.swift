@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.51
+// VERSION 3.52
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1574,6 +1574,20 @@ struct ShortcutEditorView: View {
 
 }
 
+class DarkGreyScroller: NSScroller {
+
+    override func drawKnob() {
+        let knobRect = self.rect(for: .knob)
+        let radius = knobRect.width / 2.0
+        let inset = knobRect.insetBy(dx: 1.5, dy: 2)
+        let path = NSBezierPath(roundedRect: inset, xRadius: radius, yRadius: radius)
+        NSColor(white: 1.0, alpha: 0.18).setFill()
+        path.fill()
+    }
+
+    override func drawKnobSlot(in slotRect: NSRect, highlight: Bool) {}
+}
+
 struct ScrollbarCustomizer: NSViewRepresentable {
 
     func makeNSView(context: Context) -> NSView {
@@ -1587,7 +1601,9 @@ struct ScrollbarCustomizer: NSViewRepresentable {
             while parent != nil {
 
                 if let scrollView = parent as? NSScrollView {
-                    scrollView.verticalScroller?.knobStyle = .dark
+                    let scroller = DarkGreyScroller()
+                    scroller.scrollerStyle = .overlay
+                    scrollView.verticalScroller = scroller
                     break
                 }
 
