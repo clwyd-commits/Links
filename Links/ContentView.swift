@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.53
+// VERSION 3.54
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1576,16 +1576,25 @@ struct ShortcutEditorView: View {
 
 class DarkGreyScroller: NSScroller {
 
+    override class var isCompatibleWithOverlayScrollers: Bool { true }
+
+    override func draw(_ dirtyRect: NSRect) {
+        drawKnobSlot(in: dirtyRect, highlight: false)
+        drawKnob()
+    }
+
     override func drawKnob() {
         let knobRect = self.rect(for: .knob)
-        let radius = knobRect.width / 2.0
-        let inset = knobRect.insetBy(dx: 1.5, dy: 2)
-        let path = NSBezierPath(roundedRect: inset, xRadius: radius, yRadius: radius)
-        NSColor(white: 1.0, alpha: 0.50).setFill()
+        guard !knobRect.isEmpty else { return }
+        let radius = min(knobRect.width, knobRect.height) / 2.0
+        let path = NSBezierPath(roundedRect: knobRect.insetBy(dx: 1.5, dy: 2), xRadius: radius, yRadius: radius)
+        NSColor(white: 1.0, alpha: 0.30).setFill()
         path.fill()
     }
 
-    override func drawKnobSlot(in slotRect: NSRect, highlight: Bool) {}
+    override func drawKnobSlot(in slotRect: NSRect, highlight: Bool) {
+        // Transparent track
+    }
 }
 
 struct ScrollbarCustomizer: NSViewRepresentable {
@@ -1601,9 +1610,10 @@ struct ScrollbarCustomizer: NSViewRepresentable {
             while parent != nil {
 
                 if let scrollView = parent as? NSScrollView {
+                    scrollView.scrollerStyle = .legacy
                     let scroller = DarkGreyScroller()
-                    scroller.scrollerStyle = .overlay
                     scrollView.verticalScroller = scroller
+                    scrollView.hasVerticalScroller = true
                     break
                 }
 
