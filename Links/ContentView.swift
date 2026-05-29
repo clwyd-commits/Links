@@ -121,7 +121,7 @@ struct ContentView: View {
         .overlay(alignment: .topLeading) {
             iconScaleStepper
                 .padding(.leading, 88)
-                .padding(.top, 10)
+                .offset(y: -20)
         }
         .sheet(item: $linkEditorMode) { mode in
 
@@ -595,6 +595,11 @@ struct ContentView: View {
             .buttonStyle(.plain)
             .onHover { h in withAnimation(.easeOut(duration: 0.12)) { hoveringIconPlus = h } }
         }
+        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .overlay(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(borderColor, lineWidth: 0.5)
+        )
     }
 
     var linkScaleStepper: some View {
