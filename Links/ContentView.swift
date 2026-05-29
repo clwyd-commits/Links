@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.33
+// VERSION 3.34
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -292,7 +292,7 @@ struct ContentView: View {
 
             addShortcutButton
         }
-        .offset(x: -2)
+        .offset(x: -1)
         .frame(
             maxWidth: .infinity,
             alignment: .leading
