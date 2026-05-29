@@ -96,7 +96,7 @@ struct ContentView: View {
         zoomSteps[max(0, min(linkZoomStep, zoomSteps.count - 1))]
     }
 
-    let borderColor = Color.gray.opacity(0.28)
+    let borderColor = Color.gray.opacity(0.45)
     let hoverBorderColor = Color.white.opacity(1.0)
     let panelFill = Color.white.opacity(0.025)
     var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
@@ -1139,7 +1139,7 @@ struct HoverLinkRow: View {
                                         )
                                     )
                                     .foregroundStyle(
-                                        .white.opacity(hovering ? 0.70 : 0.28)
+                                        .white.opacity(hovering ? 0.70 : 0.50)
                                     )
                             }
                         }
@@ -1154,7 +1154,7 @@ struct HoverLinkRow: View {
                                 )
                             )
                             .foregroundStyle(
-                                .white.opacity(hovering ? 0.70 : 0.28)
+                                .white.opacity(hovering ? 0.70 : 0.50)
                             )
                     }
                 }
@@ -1168,7 +1168,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 0.70 : 0.28)
+                        .white.opacity(hovering ? 0.70 : 0.50)
                     )
 
                 Spacer()
@@ -1188,7 +1188,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 0.70 : 0.28)
+                        .white.opacity(hovering ? 0.70 : 0.50)
                     )
                 }
             }
