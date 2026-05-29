@@ -357,9 +357,10 @@ struct ContentView: View {
                     )
             }
             .frame(width: shortcutIconSize * 0.7, height: shortcutIconSize * 0.7)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .clipShape(RoundedRectangle(cornerRadius: shortcutIconSize * 0.19, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: shortcutIconSize * 0.19, style: .continuous)
+                    .inset(by: 1.0)
                     .stroke(hoveringAddShortcut ? hoverBorderColor : borderColor, lineWidth: 1.0)
             )
         }
