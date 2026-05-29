@@ -534,7 +534,7 @@ struct ContentView: View {
                             hoveringAddLink
                             ? hoverBorderColor
                             : borderColor,
-                            lineWidth: 0.5
+                            lineWidth: 1.0
                         )
 
                     Image(systemName: "plus")
@@ -559,7 +559,7 @@ struct ContentView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(
                         hoveringAddLink ? hoverBorderColor : borderColor,
-                        lineWidth: 0.5
+                        lineWidth: 1.0
                     )
             )
             .contentShape(Rectangle())
@@ -1095,7 +1095,7 @@ struct HoverLinkRow: View {
                             hovering
                             ? hoverBorderColor
                             : borderColor,
-                            lineWidth: 0.5
+                            lineWidth: 1.0
                         )
 
                     RoundedRectangle(cornerRadius: 7)
@@ -1199,7 +1199,7 @@ struct HoverLinkRow: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(
                         hovering ? hoverBorderColor : borderColor,
-                        lineWidth: 0.5
+                        lineWidth: 1.0
                     )
             )
             .contentShape(Rectangle())
