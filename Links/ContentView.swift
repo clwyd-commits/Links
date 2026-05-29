@@ -95,7 +95,7 @@ struct ContentView: View {
         zoomSteps[max(0, min(linkZoomStep, zoomSteps.count - 1))]
     }
 
-    let borderColor = Color.gray.opacity(0.45)
+    let borderColor = Color.white.opacity(0.50)
     let hoverBorderColor = Color.white.opacity(1.0)
     let panelFill = Color.white.opacity(0.025)
     var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
@@ -353,7 +353,7 @@ struct ContentView: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hoveringAddShortcut ? 0.70 : 0.28)
+                        .white.opacity(hoveringAddShortcut ? 1.0 : 0.50)
                     )
             }
             .frame(width: shortcutIconSize * 0.7, height: shortcutIconSize * 0.7)
@@ -530,7 +530,7 @@ struct ContentView: View {
 
                 Image(systemName: "minus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(hoveringIconMinus ? 0.70 : 0.28))
+                    .foregroundStyle(.white.opacity(hoveringIconMinus ? 1.0 : 0.50))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
@@ -544,7 +544,7 @@ struct ContentView: View {
 
                 Image(systemName: "plus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(hoveringIconPlus ? 0.70 : 0.28))
+                    .foregroundStyle(.white.opacity(hoveringIconPlus ? 1.0 : 0.50))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
@@ -566,7 +566,7 @@ struct ContentView: View {
 
                 Image(systemName: "minus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(hoveringLinkMinus ? 0.70 : 0.28))
+                    .foregroundStyle(.white.opacity(hoveringLinkMinus ? 1.0 : 0.50))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
@@ -580,7 +580,7 @@ struct ContentView: View {
 
                 Image(systemName: "plus")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(hoveringLinkPlus ? 0.70 : 0.28))
+                    .foregroundStyle(.white.opacity(hoveringLinkPlus ? 1.0 : 0.50))
                     .frame(width: 30, height: 20)
                     .contentShape(Rectangle())
             }
@@ -930,7 +930,7 @@ struct HoverShortcutIcon: View {
                 .inset(by: 1.0)
                 .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 1.0)
         )
-        .opacity(hovering ? 1.0 : 0.72)
+        .opacity(hovering ? 1.0 : 0.50)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
@@ -1087,7 +1087,7 @@ struct HoverLinkRow: View {
                                         )
                                     )
                                     .foregroundStyle(
-                                        .white.opacity(hovering ? 0.90 : 0.50)
+                                        .white.opacity(hovering ? 1.0 : 0.50)
                                     )
                             }
                         }
@@ -1102,7 +1102,7 @@ struct HoverLinkRow: View {
                                 )
                             )
                             .foregroundStyle(
-                                .white.opacity(hovering ? 0.90 : 0.50)
+                                .white.opacity(hovering ? 1.0 : 0.50)
                             )
                     }
                 }
@@ -1116,7 +1116,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 0.90 : 0.50)
+                        .white.opacity(hovering ? 1.0 : 0.50)
                     )
 
                 Spacer()
@@ -1136,7 +1136,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 0.90 : 0.50)
+                        .white.opacity(hovering ? 1.0 : 0.50)
                     )
                 }
             }
@@ -1661,7 +1661,7 @@ struct AddLinkRow: View {
 
                     Image(systemName: "plus")
                         .font(.system(size: 11 * linkZoomFactor, weight: .regular))
-                        .foregroundStyle(.white.opacity(hovering ? 0.70 : 0.28))
+                        .foregroundStyle(.white.opacity(hovering ? 1.0 : 0.50))
                 }
                 .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
 
