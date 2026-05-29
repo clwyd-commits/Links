@@ -119,7 +119,7 @@ struct ContentView: View {
         .overlay(alignment: .topTrailing) {
             iconScaleStepper
                 .padding(.trailing, 22)
-                .offset(y: -25)
+                .offset(y: -21)
         }
         .overlay(alignment: .bottomTrailing) {
             linkScaleStepper
