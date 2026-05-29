@@ -111,17 +111,20 @@ struct ContentView: View {
             shortcutRow
 
             linkList
-
-            linkScaleStepper
         }
         .padding(22)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(background)
         .preferredColorScheme(.dark)
-        .overlay(alignment: .topLeading) {
+        .overlay(alignment: .topTrailing) {
             iconScaleStepper
-                .padding(.leading, 82)
+                .padding(.trailing, 22)
                 .offset(y: -25)
+        }
+        .overlay(alignment: .bottomTrailing) {
+            linkScaleStepper
+                .padding(.trailing, 22)
+                .padding(.bottom, 22)
         }
         .sheet(item: $linkEditorMode) { mode in
 
