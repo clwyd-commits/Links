@@ -537,9 +537,6 @@ struct ContentView: View {
                             lineWidth: 0.5
                         )
 
-                    RoundedRectangle(cornerRadius: 7)
-                        .fill(.black.opacity(0.22))
-
                     Image(systemName: "plus")
                         .font(
                             .system(
