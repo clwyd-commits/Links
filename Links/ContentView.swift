@@ -1139,7 +1139,7 @@ struct HoverLinkRow: View {
                                         )
                                     )
                                     .foregroundStyle(
-                                        .white.opacity(hovering ? 0.70 : 0.50)
+                                        .white.opacity(hovering ? 0.90 : 0.50)
                                     )
                             }
                         }
@@ -1154,7 +1154,7 @@ struct HoverLinkRow: View {
                                 )
                             )
                             .foregroundStyle(
-                                .white.opacity(hovering ? 0.70 : 0.50)
+                                .white.opacity(hovering ? 0.90 : 0.50)
                             )
                     }
                 }
@@ -1168,7 +1168,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 0.70 : 0.50)
+                        .white.opacity(hovering ? 0.90 : 0.50)
                     )
 
                 Spacer()
@@ -1188,7 +1188,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 0.70 : 0.50)
+                        .white.opacity(hovering ? 0.90 : 0.50)
                     )
                 }
             }
