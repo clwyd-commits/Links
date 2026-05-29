@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.52
+// VERSION 3.53
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1581,7 +1581,7 @@ class DarkGreyScroller: NSScroller {
         let radius = knobRect.width / 2.0
         let inset = knobRect.insetBy(dx: 1.5, dy: 2)
         let path = NSBezierPath(roundedRect: inset, xRadius: radius, yRadius: radius)
-        NSColor(white: 1.0, alpha: 0.18).setFill()
+        NSColor(white: 1.0, alpha: 0.50).setFill()
         path.fill()
     }
 
