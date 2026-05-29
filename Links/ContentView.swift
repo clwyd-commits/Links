@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.44
+// VERSION 3.45
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -127,13 +127,13 @@ struct ContentView: View {
         .preferredColorScheme(.dark)
         .overlay(alignment: .topTrailing) {
             iconScaleStepper
-                .padding(.trailing, 22)
+                .padding(.trailing, 8)
                 .offset(y: -21)
         }
         .overlay(alignment: .bottomTrailing) {
             linkScaleStepper
-                .padding(.trailing, 22)
-                .padding(.bottom, 22)
+                .padding(.trailing, 8)
+                .padding(.bottom, 8)
         }
         .sheet(item: $linkEditorMode) { mode in
 
