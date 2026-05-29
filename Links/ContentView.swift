@@ -977,6 +977,10 @@ struct HoverShortcutIcon: View {
         }
         .frame(width: iconSize, height: iconSize)
         .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
+        )
         .opacity(hovering ? 1.0 : 0.72)
         .onHover { hover in
 
