@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.39
+// VERSION 3.40
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -1613,7 +1613,7 @@ struct AddLinkRow: View {
                 ZStack {
 
                     Image(systemName: "plus")
-                        .font(.system(size: 11 * linkZoomFactor, weight: .regular))
+                        .font(.system(size: 11, weight: .regular))
                         .foregroundStyle(.white.opacity(hovering ? 1.0 : 0.50))
                 }
                 .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
