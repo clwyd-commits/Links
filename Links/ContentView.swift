@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.22
+// VERSION 3.23
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -331,7 +331,7 @@ struct ContentView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: shortcutIconSize * 0.19, style: .continuous)
                     .inset(by: 1.0)
-                    .stroke(hoveringAddShortcut ? hoverBorderColor : borderColor, lineWidth: 1.0)
+                    .stroke(hoveringAddShortcut ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
         }
         .buttonStyle(.plain)
@@ -525,7 +525,7 @@ struct ContentView: View {
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
             RoundedRectangle(cornerRadius: 5)
-                .stroke((hoveringIconMinus || hoveringIconPlus) ? hoverBorderColor : borderColor, lineWidth: 1.0)
+                .stroke((hoveringIconMinus || hoveringIconPlus) ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
     }
 
@@ -561,7 +561,7 @@ struct ContentView: View {
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .overlay(
             RoundedRectangle(cornerRadius: 5)
-                .stroke((hoveringLinkMinus || hoveringLinkPlus) ? hoverBorderColor : borderColor, lineWidth: 1.0)
+                .stroke((hoveringLinkMinus || hoveringLinkPlus) ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
     }
 
@@ -897,7 +897,7 @@ struct HoverShortcutIcon: View {
         .overlay(
             RoundedRectangle(cornerRadius: iconSize * 0.27, style: .continuous)
                 .inset(by: 1.0)
-                .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 1.0)
+                .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
         .opacity(hovering ? 1.0 : 0.50)
         .onHover { hover in
@@ -1012,7 +1012,7 @@ struct HoverLinkRow: View {
                             hovering
                             ? hoverBorderColor
                             : borderColor,
-                            lineWidth: 1.0
+                            lineWidth: 0.5
                         )
 
                     RoundedRectangle(cornerRadius: 9, style: .continuous)
@@ -1116,7 +1116,7 @@ struct HoverLinkRow: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(
                         hovering ? hoverBorderColor : borderColor,
-                        lineWidth: 1.0
+                        lineWidth: 0.5
                     )
             )
             .contentShape(Rectangle())
@@ -1625,7 +1625,7 @@ struct AddLinkRow: View {
                     RoundedRectangle(cornerRadius: 9, style: .continuous)
                         .stroke(
                             hovering ? hoverBorderColor : borderColor,
-                            lineWidth: 1.0
+                            lineWidth: 0.5
                         )
 
                     Image(systemName: "plus")
@@ -1641,7 +1641,7 @@ struct AddLinkRow: View {
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 1.0)
+                    .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
             .contentShape(Rectangle())
         }
