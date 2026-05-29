@@ -97,7 +97,7 @@ struct ContentView: View {
     }
 
     let borderColor = Color.gray.opacity(0.28)
-    let hoverBorderColor = Color.white.opacity(0.55)
+    let hoverBorderColor = Color.white.opacity(0.80)
     let panelFill = Color.white.opacity(0.025)
     var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
     var shortcutIconSpacing: CGFloat { 10 * iconZoomFactor }
@@ -361,7 +361,7 @@ struct ContentView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(borderColor, lineWidth: 0.5)
+                    .stroke(hoveringAddShortcut ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
         }
         .buttonStyle(.plain)
