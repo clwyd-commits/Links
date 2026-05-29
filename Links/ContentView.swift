@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.38
+// VERSION 3.39
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -317,12 +317,7 @@ struct ContentView: View {
             ZStack {
 
                 Image(systemName: "plus")
-                    .font(
-                        .system(
-                            size: 13,
-                            weight: .medium
-                        )
-                    )
+                    .font(.system(size: 11, weight: .regular))
                     .foregroundStyle(
                         .white.opacity(hoveringAddShortcut ? 1.0 : 0.50)
                     )
