@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.47
+// VERSION 3.48
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -338,6 +338,7 @@ struct ContentView: View {
                     .inset(by: 1.0)
                     .stroke(hoveringAddShortcut ? hoverBorderColor : borderColor, lineWidth: 0.5)
             )
+            .frame(width: shortcutIconSize, height: shortcutIconSize)
         }
         .buttonStyle(.plain)
         .onHover { hovering in
