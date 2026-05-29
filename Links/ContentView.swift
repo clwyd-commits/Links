@@ -220,38 +220,14 @@ struct ContentView: View {
                 if let screen = NSScreen.main {
                     window.maxSize = screen.visibleFrame.size
                 }
-                // Match title bar to content background
-                window.titlebarAppearsTransparent = true
-                window.backgroundColor = NSColor(
-                    red: 0.05,
-                    green: 0.05,
-                    blue: 0.055,
-                    alpha: 1.0
-                )
             }
         }
     }
 
     var background: some View {
 
-        ZStack {
-
-            Color(
-                red: 0.05,
-                green: 0.05,
-                blue: 0.055
-            )
-
-            LinearGradient(
-                colors: [
-                    Color.white.opacity(0.04),
-                    Color.black.opacity(0.18)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
-        .ignoresSafeArea()
+        Color(NSColor.windowBackgroundColor)
+            .ignoresSafeArea()
     }
 
     var topBar: some View {
