@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.41
+// VERSION 3.42
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -112,7 +112,10 @@ struct ContentView: View {
             linkList
                 .padding(.trailing, -22)
         }
-        .padding(22)
+        .padding(.horizontal, 22)
+        .padding(.top, 38)
+        .padding(.bottom, 52)
+        .clipped()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(background)
         .preferredColorScheme(.dark)
@@ -444,6 +447,7 @@ struct ContentView: View {
             .padding(.trailing, 22)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .clipped()
         .background(ScrollbarCustomizer())
     }
 
