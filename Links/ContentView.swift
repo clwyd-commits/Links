@@ -111,6 +111,7 @@ struct ContentView: View {
             shortcutRow
 
             linkList
+                .padding(.trailing, -22)
         }
         .padding(22)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -469,8 +470,10 @@ struct ContentView: View {
                 addLinkRow
             }
             .padding(.bottom, 18)
+            .padding(.trailing, 22)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .background(ScrollbarCustomizer())
     }
 
 
@@ -1650,6 +1653,33 @@ struct ShortcutEditorView: View {
         }
     }
 
+}
+
+struct ScrollbarCustomizer: NSViewRepresentable {
+
+    func makeNSView(context: Context) -> NSView {
+
+        let view = NSView()
+
+        DispatchQueue.main.async {
+
+            var parent = view.superview
+
+            while parent != nil {
+
+                if let scrollView = parent as? NSScrollView {
+                    scrollView.verticalScroller?.knobStyle = .dark
+                    break
+                }
+
+                parent = parent?.superview
+            }
+        }
+
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
 }
 
 #Preview {
