@@ -1,7 +1,7 @@
 // LINKS APP
-// VERSION 3.68
+// VERSION 3.69
 // Light font, full-row hover hit area, icon brightness on hover
-// 2026-05-28
+// 2026-05-30
 
 import SwiftUI
 import UniformTypeIdentifiers
@@ -81,8 +81,10 @@ struct ContentView: View {
     @State private var hoveringLinkMinus = false
     @State private var hoveringLinkPlus = false
 
-    // Offset that aligns the stepper's top edge with the traffic-light circle top
+    // Offset that aligns the icon stepper's top edge with the traffic-light circle top.
+    // trafficLightTop is the same distance value reused for the link stepper's bottom gap.
     @State private var iconStepperOffset: CGFloat = -21
+    @State private var trafficLightTop: CGFloat = 8
 
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
@@ -148,7 +150,7 @@ struct ContentView: View {
         .overlay(alignment: .bottomTrailing) {
             linkScaleStepper
                 .padding(.trailing, 22)
-                .padding(.bottom, 8)
+                .padding(.bottom, trafficLightTop)
         }
         .sheet(item: $linkEditorMode) { mode in
 
@@ -264,6 +266,10 @@ struct ContentView: View {
                    let sv = closeButton.superview {
                     let buttonInBase = sv.convert(closeButton.frame, to: nil)
                     self.iconStepperOffset = window.contentLayoutRect.maxY - buttonInBase.maxY
+                    // Same distance reused for the link stepper's bottom gap:
+                    // "how far is the traffic-light top from the window top"
+                    let windowHeight = window.contentView?.bounds.height ?? window.frame.height
+                    self.trafficLightTop = windowHeight - buttonInBase.maxY
                 }
             }
         }
