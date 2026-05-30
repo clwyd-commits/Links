@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.69
+// VERSION 3.70
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-30
 
@@ -965,7 +965,7 @@ struct HoverShortcutIcon: View {
                 .inset(by: 1.0)
                 .stroke(hovering ? hoverBorderColor : borderColor, lineWidth: 0.5)
         )
-        .opacity(hovering ? 1.0 : 0.50)
+        .opacity(hovering ? 1.0 : 0.75)
         .onHover { hover in
 
             withAnimation(.easeOut(duration: 0.12)) {
