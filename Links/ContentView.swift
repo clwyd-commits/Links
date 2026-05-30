@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.65
+// VERSION 3.66
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -59,12 +59,6 @@ enum LinkEditorMode: Identifiable {
 
 private let defaultZoomStep = 5
 
-private struct ShortcutRowHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = max(value, nextValue())
-    }
-}
 
 struct ContentView: View {
 
@@ -86,8 +80,6 @@ struct ContentView: View {
     @State private var hoveringIconPlus = false
     @State private var hoveringLinkMinus = false
     @State private var hoveringLinkPlus = false
-
-    @State private var shortcutRowHeight: CGFloat = 87   // measured; 87 ≈ one row at default zoom
 
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
@@ -114,37 +106,27 @@ struct ContentView: View {
 
     var body: some View {
 
-        ZStack(alignment: .topLeading) {
+        GeometryReader { geo in
 
-            // Link list: padded down so it starts below the fixed icon row
-            linkList
-                .padding(.trailing, -22)
-                .padding(.horizontal, 22)
-                .padding(.top, shortcutRowHeight)
-                .padding(.bottom, 36)
+            // Compute the icon row height synchronously — no state, no async, no glitch
+            let rowHeight = shortcutRowHeight(containerWidth: geo.size.width)
 
-            // Icon row: anchored to topLeading of the ZStack — cannot drift
-            shortcutRow
-                .padding(.horizontal, 22)
-                .padding(.top, 8)
-                .padding(.bottom, shortcutIconSpacing)
-                .background(
-                    GeometryReader { geo in
-                        Color.clear.preference(
-                            key: ShortcutRowHeightKey.self,
-                            value: geo.size.height
-                        )
-                    }
-                )
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .onPreferenceChange(ShortcutRowHeightKey.self) { height in
-            guard height > 0 else { return }
-            shortcutRowHeight = height
-            DispatchQueue.main.async {
-                guard let window = NSApplication.shared.windows.first else { return }
-                window.minSize = NSSize(width: 280, height: height + 80)
+            ZStack(alignment: .topLeading) {
+
+                // Link list starts below the icon row
+                linkList
+                    .padding(.trailing, -22)
+                    .padding(.horizontal, 22)
+                    .padding(.top, rowHeight)
+                    .padding(.bottom, 36)
+
+                // Icon row pinned to topLeading — ZStack cannot reposition it
+                shortcutRow
+                    .padding(.horizontal, 22)
+                    .padding(.top, 8)
+                    .padding(.bottom, shortcutIconSpacing)
             }
+            .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
         }
         .mask(alignment: .top) {
             VStack(spacing: 0) {
@@ -266,8 +248,31 @@ struct ContentView: View {
                 // Transparent title bar + clear window background lets SwiftUI fill everything
                 window.titlebarAppearsTransparent = true
                 window.backgroundColor = .clear
+                self.updateWindowMinSize()
             }
         }
+        .onChange(of: shortcuts.count) { _ in updateWindowMinSize() }
+        .onChange(of: iconZoomStep)    { _ in updateWindowMinSize() }
+    }
+
+    // Compute icon-row height from first principles — same math the LazyVGrid uses,
+    // so the result is always in sync with the grid without any async measurement.
+    func shortcutRowHeight(containerWidth: CGFloat) -> CGFloat {
+        let availableWidth = containerWidth - 44   // 22pt padding each side
+        let itemStep     = shortcutIconSize + shortcutIconSpacing
+        let itemsPerRow  = max(1, Int((availableWidth + shortcutIconSpacing) / itemStep))
+        let totalItems   = shortcuts.count + 1     // +1 for the add button
+        let numRows      = max(1, Int(ceil(Double(totalItems) / Double(itemsPerRow))))
+        let gridHeight   = CGFloat(numRows) * shortcutIconSize
+                         + CGFloat(numRows - 1) * shortcutIconSpacing
+        // 8pt top pad  +  grid  +  2pt VStack bottom pad  +  spacing below row
+        return 8 + gridHeight + 2 + shortcutIconSpacing
+    }
+
+    func updateWindowMinSize() {
+        guard let window = NSApplication.shared.windows.first else { return }
+        let rowH = shortcutRowHeight(containerWidth: window.frame.width)
+        window.minSize = NSSize(width: 200, height: rowH + 80)
     }
 
     var background: some View {
