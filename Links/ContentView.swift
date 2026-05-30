@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.59
+// VERSION 3.60
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -108,6 +108,8 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: shortcutIconSpacing) {
 
             shortcutRow
+                .fixedSize(horizontal: false, vertical: true)
+                .layoutPriority(1)
 
             linkList
                 .padding(.trailing, -22)
