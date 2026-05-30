@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.63
+// VERSION 3.64
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -244,8 +244,10 @@ struct ContentView: View {
             // Configure the window after SwiftUI has finished building it
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 guard let window = NSApplication.shared.windows.first else { return }
-                // Allow dragging from anywhere in the window body
-                window.isMovableByWindowBackground = true
+                // Window is movable from the hidden title-bar zone at the top
+                // (do NOT set isMovableByWindowBackground — that causes bottom drags
+                //  to be interpreted as window movement rather than resize)
+                window.isMovableByWindowBackground = false
                 // Normal managed window — no forced snapping to screen edges
                 window.collectionBehavior = [.managed, .participatesInCycle]
                 // Disable frame autosave so previous positions don't override
