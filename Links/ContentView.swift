@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.64
+// VERSION 3.65
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -87,6 +87,8 @@ struct ContentView: View {
     @State private var hoveringLinkMinus = false
     @State private var hoveringLinkPlus = false
 
+    @State private var shortcutRowHeight: CGFloat = 87   // measured; 87 ≈ one row at default zoom
+
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
     @AppStorage("iconZoomStep") private var iconZoomStep: Int = defaultZoomStep
@@ -112,33 +114,38 @@ struct ContentView: View {
 
     var body: some View {
 
-        linkList
-            .padding(.trailing, -22)
-            .padding(.horizontal, 22)
-            .padding(.bottom, 36)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .safeAreaInset(edge: .top, spacing: 0) {
-                shortcutRow
-                    .padding(.horizontal, 22)
-                    .padding(.top, 8)
-                    .padding(.bottom, shortcutIconSpacing)
-                    .background(
-                        GeometryReader { geo in
-                            Color.clear.preference(
-                                key: ShortcutRowHeightKey.self,
-                                value: geo.size.height
-                            )
-                        }
-                    )
+        ZStack(alignment: .topLeading) {
+
+            // Link list: padded down so it starts below the fixed icon row
+            linkList
+                .padding(.trailing, -22)
+                .padding(.horizontal, 22)
+                .padding(.top, shortcutRowHeight)
+                .padding(.bottom, 36)
+
+            // Icon row: anchored to topLeading of the ZStack — cannot drift
+            shortcutRow
+                .padding(.horizontal, 22)
+                .padding(.top, 8)
+                .padding(.bottom, shortcutIconSpacing)
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.preference(
+                            key: ShortcutRowHeightKey.self,
+                            value: geo.size.height
+                        )
+                    }
+                )
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .onPreferenceChange(ShortcutRowHeightKey.self) { height in
+            guard height > 0 else { return }
+            shortcutRowHeight = height
+            DispatchQueue.main.async {
+                guard let window = NSApplication.shared.windows.first else { return }
+                window.minSize = NSSize(width: 280, height: height + 80)
             }
-            .onPreferenceChange(ShortcutRowHeightKey.self) { height in
-                guard height > 0 else { return }
-                DispatchQueue.main.async {
-                    guard let window = NSApplication.shared.windows.first else { return }
-                    // Enforce minimum height so safeAreaInset never overflows
-                    window.minSize = NSSize(width: 280, height: height + 80)
-                }
-            }
+        }
         .mask(alignment: .top) {
             VStack(spacing: 0) {
                 Color.clear.frame(height: 8)
