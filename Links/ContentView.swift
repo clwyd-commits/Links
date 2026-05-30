@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.71
+// VERSION 3.72
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-30
 
@@ -1163,7 +1163,7 @@ struct HoverLinkRow: View {
                     .font(
                         .system(
                             size: 11 * zoomFactor,
-                            weight: .regular
+                            weight: .thin
                         )
                     )
                     .foregroundStyle(
