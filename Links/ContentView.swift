@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.61
+// VERSION 3.62
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -105,19 +105,17 @@ struct ContentView: View {
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: shortcutIconSpacing) {
-
-            shortcutRow
-                .fixedSize(horizontal: false, vertical: true)
-                .layoutPriority(1)
-
-            linkList
-                .padding(.trailing, -22)
-        }
-        .padding(.horizontal, 22)
-        .padding(.top, 8)
-        .padding(.bottom, 36)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        linkList
+            .padding(.trailing, -22)
+            .padding(.horizontal, 22)
+            .padding(.bottom, 36)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .safeAreaInset(edge: .top, spacing: 0) {
+                shortcutRow
+                    .padding(.horizontal, 22)
+                    .padding(.top, 8)
+                    .padding(.bottom, shortcutIconSpacing)
+            }
         .mask(alignment: .top) {
             VStack(spacing: 0) {
                 Color.clear.frame(height: 8)
