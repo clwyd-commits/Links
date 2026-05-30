@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.66
+// VERSION 3.67
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -81,6 +81,9 @@ struct ContentView: View {
     @State private var hoveringLinkMinus = false
     @State private var hoveringLinkPlus = false
 
+    // Offset that aligns the stepper's top edge with the traffic-light circle top
+    @State private var iconStepperOffset: CGFloat = -21
+
     @State private var linkSaveTask: DispatchWorkItem?
     @State private var shortcutSaveTask: DispatchWorkItem?
     @AppStorage("iconZoomStep") private var iconZoomStep: Int = defaultZoomStep
@@ -140,7 +143,7 @@ struct ContentView: View {
         .overlay(alignment: .topTrailing) {
             iconScaleStepper
                 .padding(.trailing, 22)
-                .offset(y: -21)
+                .offset(y: iconStepperOffset)
         }
         .overlay(alignment: .bottomTrailing) {
             linkScaleStepper
@@ -249,6 +252,15 @@ struct ContentView: View {
                 window.titlebarAppearsTransparent = true
                 window.backgroundColor = .clear
                 self.updateWindowMinSize()
+
+                // Align icon stepper top edge with the traffic-light circle top edge.
+                // overlay(alignment: .topTrailing) starts at the SwiftUI safe-area boundary
+                // (= bottom of the title bar in NSView coords, i.e. contentLayoutRect.maxY).
+                // The close button's frame.maxY is its top edge in NSView coords (y-up).
+                // offset = contentLayoutRect.maxY − closeButton.frame.maxY  (negative = up).
+                if let closeButton = window.standardWindowButton(.closeButton) {
+                    self.iconStepperOffset = window.contentLayoutRect.maxY - closeButton.frame.maxY
+                }
             }
         }
         .onChange(of: shortcuts.count) { _ in updateWindowMinSize() }
