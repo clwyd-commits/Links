@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.70
+// VERSION 3.71
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-30
 
@@ -1114,7 +1114,7 @@ struct HoverLinkRow: View {
                                         )
                                     )
                                     .foregroundStyle(
-                                        .white.opacity(hovering ? 1.0 : 0.50)
+                                        .white.opacity(hovering ? 1.0 : 0.75)
                                     )
                             }
                         }
@@ -1129,7 +1129,7 @@ struct HoverLinkRow: View {
                                 )
                             )
                             .foregroundStyle(
-                                .white.opacity(hovering ? 1.0 : 0.50)
+                                .white.opacity(hovering ? 1.0 : 0.75)
                             )
                     }
                 }
@@ -1147,7 +1147,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 1.0 : 0.50)
+                        .white.opacity(hovering ? 1.0 : 0.75)
                     )
 
                 Spacer()
@@ -1167,7 +1167,7 @@ struct HoverLinkRow: View {
                         )
                     )
                     .foregroundStyle(
-                        .white.opacity(hovering ? 1.0 : 0.50)
+                        .white.opacity(hovering ? 1.0 : 0.75)
                     )
                 }
             }
@@ -1710,7 +1710,7 @@ struct AddLinkRow: View {
 
                     Image(systemName: "plus")
                         .font(.system(size: 14, weight: .thin))
-                        .foregroundStyle(.white.opacity(hovering ? 1.0 : 0.50))
+                        .foregroundStyle(.white.opacity(hovering ? 1.0 : 0.75))
                 }
                 .frame(width: 24 * linkZoomFactor, height: 24 * linkZoomFactor)
                 .overlay(
