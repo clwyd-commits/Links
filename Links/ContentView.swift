@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.58
+// VERSION 3.59
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -95,7 +95,7 @@ struct ContentView: View {
         zoomSteps[max(0, min(linkZoomStep, zoomSteps.count - 1))]
     }
 
-    let borderColor = Color.white.opacity(0.125)
+    let borderColor = Color.white.opacity(0.20)
     let hoverBorderColor = Color.white.opacity(1.0)
     let panelFill = Color.white.opacity(0.025)
     var shortcutIconSize: CGFloat { 69 * iconZoomFactor }
@@ -1588,7 +1588,7 @@ class DarkGreyScroller: NSScroller {
         guard !knobRect.isEmpty else { return }
         let radius = min(knobRect.width, knobRect.height) / 2.0
         let path = NSBezierPath(roundedRect: knobRect.insetBy(dx: 1.5, dy: 2), xRadius: radius, yRadius: radius)
-        NSColor(white: 1.0, alpha: 0.03).setFill()
+        NSColor(white: 1.0, alpha: 0.20).setFill()
         path.fill()
     }
 
