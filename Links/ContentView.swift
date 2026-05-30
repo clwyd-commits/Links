@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.62
+// VERSION 3.63
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-28
 
@@ -59,6 +59,13 @@ enum LinkEditorMode: Identifiable {
 
 private let defaultZoomStep = 5
 
+private struct ShortcutRowHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
 struct ContentView: View {
 
     @State private var links: [LinkItem] = []
@@ -115,6 +122,22 @@ struct ContentView: View {
                     .padding(.horizontal, 22)
                     .padding(.top, 8)
                     .padding(.bottom, shortcutIconSpacing)
+                    .background(
+                        GeometryReader { geo in
+                            Color.clear.preference(
+                                key: ShortcutRowHeightKey.self,
+                                value: geo.size.height
+                            )
+                        }
+                    )
+            }
+            .onPreferenceChange(ShortcutRowHeightKey.self) { height in
+                guard height > 0 else { return }
+                DispatchQueue.main.async {
+                    guard let window = NSApplication.shared.windows.first else { return }
+                    // Enforce minimum height so safeAreaInset never overflows
+                    window.minSize = NSSize(width: 280, height: height + 80)
+                }
             }
         .mask(alignment: .top) {
             VStack(spacing: 0) {
