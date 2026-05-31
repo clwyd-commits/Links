@@ -1,5 +1,5 @@
 // LINKS APP
-// VERSION 3.72
+// VERSION 3.73
 // Light font, full-row hover hit area, icon brightness on hover
 // 2026-05-30
 
@@ -273,8 +273,8 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: shortcuts.count) { _ in updateWindowMinSize() }
-        .onChange(of: iconZoomStep)    { _ in updateWindowMinSize() }
+        .onChange(of: shortcuts.count) { updateWindowMinSize() }
+        .onChange(of: iconZoomStep)    { updateWindowMinSize() }
     }
 
     // Compute icon-row height from first principles — same math the LazyVGrid uses,
